@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Trending Analyzer</title>
+    
+    <link rel="icon" href="https://www.youtube.com/s/desktop/1a56be5e/img/favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Basic Reset & Typography */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Soft shadow */
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50; /* Darker title color */
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-top: 40px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        /* Controls Area */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .controls label {
+            font-size: 1.1em;
+            font-weight: 400;
+            color: #555;
+        }
+
+        .controls select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none; /* Remove default dropdown arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.8%204.9-4.7%2011-2.7%2017.2l128%20160c3.7%204.7%209.1%207.5%2014.7%207.5s11-2.8%2014.7-7.5l128-160c2.1-6.2%201.2-12.3-2.7-17.2z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px auto;
+        }
+
+        .controls select:hover {
+            border-color: #a0a0a0;
+        }
+        .controls select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .video-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 160px; /* Fixed height for thumbnails */
+            object-fit: cover; /* Ensures image covers the area */
+            display: block;
+        }
+
+        .video-info {
+            padding: 15px;
+            flex-grow: 1; /* Allows info to take remaining space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-info h3 {
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+            max-height: 4.4em; /* Limit title to 3 lines (1.6 * 3 = 4.8, giving some buffer) */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .video-info p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Chart Section */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Two columns, responsive */
+            gap: 30px;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .chart-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            min-height: 350px; /* Ensure charts have enough space */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* --- THIS IS THE CSS FIX --- */
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+        /* --- END OF FIX --- */
+
+        .chart-card h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        /* Loader */
+        .loader {
+            border: 6px solid #f3f3f3; /* Light grey */
+            border-top: 6px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer (optional but good for hackathons) */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            color: #777;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Trending Video Analyzer</h1>
+
+        <div class="controls">
+            <label for="countrySelect">Select Country:</label>
+            <select id="countrySelect">
+                
+                <option value="US">United States</option>
+                <option value="IN" selected>India</option>
+                <option value="GB">United Kingdom</option>
+                <option value="CA">Canada</option>
+                <option value="AU">Australia</option>
+                <option value="DE">Germany</option>
+                <option value="BR">Brazil</option>
+                <option value="JP">Japan</option>
+                <option value="KR">South Korea</option>
+                <option value="MX">Mexico</option>
+            </select>
+        </div>
+
+        <div id="loader" class="loader"></div> 
+
+        <div class="main-content">
+            <h2 id="videoSectionTitle">Trending Videos in India</h2>
+            <div id="videoGrid" class="video-grid">
+                </div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h3>Top Categories</h3>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    </div>
+                <div class="chart-card">
+                    <h3>Top Keywords in Titles</h3>
+                    <div class="chart-container">
+                        <canvas id="keywordChart"></canvas>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 YouTube Trending Analyzer. Built for Hackathon. Data from <a href="https://developers.google.com/youtube/v3" target="_blank">YouTube Data API v3</a>.</p>
+    </footer>
+
+    
+    <script>
+        // --- 1. DOM Element Selectors ---
+        // Get references to all the important HTML elements we need to work with
+        const countrySelect = document.getElementById('countrySelect');
+        const videoGrid = document.getElementById('videoGrid');
+        const categoryChartCanvas = document.getElementById('categoryChart').getContext('2d');
+        const keywordChartCanvas = document.getElementById('keywordChart').getContext('2d');
+        const loader = document.getElementById('loader');
+        const mainContent = document.querySelector('.main-content');
+        const videoSectionTitle = document.getElementById('videoSectionTitle');
+
+        // --- 2. Chart Variables ---
+        // We initialize these variables so we can create/update the charts later
+        let categoryChart;
+        let keywordChart;
+
+        // --- 3. YouTube Category Map ---
+        // This is crucial for making our chart user-friendly.
+        // The API gives us IDs (e.g., "10"), we map them to names (e.g., "Music").
+        const categoryMap = {
+            '1': 'Film & Animation',
+            '2': 'Autos & Vehicles',
+            '10': 'Music',
+            '15': 'Pets & Animals',
+            '17': 'Sports',
+            '18': 'Short Movies',
+            '19': 'Travel & Events',
+            '20': 'Gaming',
+            '21': 'Videoblogging',
+            '22': 'People & Blogs',
+            '23': 'Comedy',
+            '24': 'Entertainment',
+            '25': 'News & Politics',
+            '26': 'Howto & Style',
+            '27': 'Education',
+            '28': 'Science & Technology',
+            '29': 'Nonprofits & Activism',
+            '30': 'Movies',
+            '43': 'Shows'
+        };
+
+        // --- 4. Event Listener ---
+        // This function runs every time the user picks a new country from the dropdown
+        countrySelect.addEventListener('change', () => {
+            const selectedCountry = countrySelect.value;
+            // Get the text of the selected option (e.g., "India")
+            const selectedCountryName = countrySelect.options[countrySelect.selectedIndex].text;
+            // Update the title
+            videoSectionTitle.textContent = `Trending Videos in ${selectedCountryName}`;
+            // Fetch the new data
+            fetchTrendingData(selectedCountry);
+        });
+
+        // --- 5. Main Data Fetching Function ---
+        async function fetchTrendingData(countryCode) {
+            // Show loader and hide content to indicate loading
+            loader.style.display = 'block';
+            mainContent.style.display = 'none';
+
+            try {
+                // Use fetch to call our own backend server
+                // This is the "API Integration" part
+                
+                const response = await fetch(`http://127.0.0.1:5000/get_trending_data?country=${countryCode}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    // We got good data, now update the page
+                    updateVideoGrid(data.videos);
+                    updateCharts(data.category_analysis, data.keyword_analysis);
+                } else {
+                    // Handle errors reported by our backend
+                    console.error('Error from backend:', data.error);
+                    videoGrid.innerHTML = '<p>Could not fetch trending data. Please try again later.</p>';
+                }
+
+            } catch (error) {
+                // Handle network errors
+                console.error('Fetch error:', error);
+                // This error message will now most likely be a "CORS error"
+                videoGrid.innerHTML = `<p>Could not connect to the server. Error: ${error.message}</p>`;
+            } finally {
+                // This always runs, whether successful or not
+                // Hide loader and show content again
+                loader.style.display = 'none';
+                mainContent.style.display = 'block';
+            }
+        }
+
+        // --- 6. Helper Function: Update Video Grid ---
+        function updateVideoGrid(videos) {
+            // Clear out any old videos
+            videoGrid.innerHTML = '';
+
+            if (videos.length === 0) {
+                videoGrid.innerHTML = '<p>No trending videos found for this region.</p>';
+                return;
+            }
+
+            // Loop through each video and create an HTML card for it
+            videos.forEach(video => {
+                const videoCard = `
+                    <div class="video-card"> 
+                        <img src="${video.thumbnail}" alt="Video thumbnail">
+                        <div class="video-info">
+                            <h3>${video.title}</h3>
+                            <p>${Number(video.views).toLocaleString()} views</p>
+                        </div>
+                    </div>
+                `;
+                // Add the new card to the grid
+                videoGrid.innerHTML += videoCard;
+            });
+        }
+
+        // --- 7. Helper Function: Update Charts ---
+        function updateCharts(categoryData, keywordData) {
+            
+            // --- Process Category Data ---
+            // Map IDs to names and sort by count
+            const categoryLabels = Object.keys(categoryData).map(id => categoryMap[id] || `Other (${id})`);
+            const categoryCounts = Object.values(categoryData);
+
+            // --- Process Keyword Data ---
+            const keywordLabels = keywordData.map(item => item[0]); // e.g., "trailer"
+            const keywordCounts = keywordData.map(item => item[1]); // e.g., 9
+
+            // --- Update Category Chart (Doughnut) ---
+            if (categoryChart) {
+                // If chart already exists, just update its data
+                categoryChart.data.labels = categoryLabels;
+                categoryChart.data.datasets[0].data = categoryCounts;
+                categoryChart.update();
+            } else {
+                // If it's the first time, create the chart
+                categoryChart = new Chart(categoryChartCanvas, {
+                    type: 'doughnut', // A nice-looking chart type
+                    data: {
+                        labels: categoryLabels,
+                        datasets: [{
+                            label: 'Videos per Category',
+                            data: categoryCounts,
+                            backgroundColor: [
+                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                                '#FF9F40', '#C9CBCF', '#E7E9ED', '#7FCDFF', '#F99157'
+                            ], // Add more colors if needed
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // This is key, but needs a fixed parent
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- Update Keyword Chart (Bar) ---
+            if (keywordChart) {
+                // If chart exists, update it
+                keywordChart.data.labels = keywordLabels;
+                keywordChart.data.datasets[0].data = keywordCounts;
+                keywordChart.update();
+            } else {
+                // If it's the first time, create it
+                keywordChart = new Chart(keywordChartCanvas, {
+                    type: 'bar', // Bar chart is
+                    data: {
+                        labels: keywordLabels,
+                        datasets: [{
+                            label: 'Top Keyword Mentions',
+                            data: keywordCounts,
+                            backgroundColor: '#36A2EB',
+                            borderColor: '#36A2EB',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', // Makes it a horizontal bar chart!
+                        responsive: true,
+                        maintainAspectRatio: false, // This is key, but needs a fixed parent
+                        plugins: {
+                            legend: {
+                                display: false // No legend needed for a single-dataset bar chart
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- 8. Initial Load ---
+        // Fetch data for the default country (India) when the page first loads
+        fetchTrendingData('IN');
+    </script>
+</body>
+</html>
