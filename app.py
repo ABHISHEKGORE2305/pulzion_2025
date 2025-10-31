@@ -100,6 +100,7 @@ def get_trending_data():
         video_dashboard_list = []
         for item in video_items:
             video_dashboard_list.append({
+                "video_id": item['id'],
                 "title": item['snippet']['title'],
                 "thumbnail": item['snippet']['thumbnails']['default']['url'],
                 "views": item['statistics'].get('viewCount', 'N/A')
