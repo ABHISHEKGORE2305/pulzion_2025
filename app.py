@@ -69,6 +69,81 @@ def analyze_keywords(video_items):
     # Return the 15 most common keywords
     return Counter(words).most_common(15)
 
+def analyze_upload_vs_popularity(video_items):
+    """Analyzes time since upload vs popularity for scatter/bubble chart visualization."""
+    from datetime import datetime, timezone
+    
+    data_points = []
+    
+    for item in video_items:
+        snippet = item.get('snippet', {})
+        statistics = item.get('statistics', {})
+        
+        published_at = snippet.get('publishedAt')
+        views_str = statistics.get('viewCount')
+        
+        # Calculate engagement rate
+        likes_str = statistics.get('likeCount')
+        comments_str = statistics.get('commentCount')
+        
+        try:
+            views = int(views_str) if views_str is not None else 0
+        except ValueError:
+            views = 0
+        
+        try:
+            likes = int(likes_str) if likes_str is not None else 0
+        except ValueError:
+            likes = 0
+        
+        try:
+            comments = int(comments_str) if comments_str is not None else 0
+        except ValueError:
+            comments = 0
+        
+        engagement_rate = round(((likes + comments) / views) * 100, 2) if views > 0 else 0.0
+        
+        # Calculate days since upload
+        if published_at:
+            try:
+                # Handle different date formats from YouTube API
+                if published_at.endswith('Z'):
+                    upload_date = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%SZ")
+                else:
+                    upload_date = datetime.strptime(published_at.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+                
+                days_since_upload = (datetime.now(timezone.utc) - upload_date.replace(tzinfo=timezone.utc)).days
+                
+                if days_since_upload is not None and days_since_upload >= 0:
+                    data_points.append({
+                        "x": days_since_upload,
+                        "y": views,
+                        "engagement_rate": engagement_rate  # Store for later normalization
+                    })
+            except Exception as e:
+                # Skip videos with invalid date formats
+                continue
+    
+    # Normalize bubble sizes based on engagement rates for better visualization
+    if data_points:
+        engagement_rates = [point["engagement_rate"] for point in data_points]
+        min_engagement = min(engagement_rates) if engagement_rates else 0
+        max_engagement = max(engagement_rates) if engagement_rates else 1
+        
+        # Normalize to a reasonable bubble size range (4 to 12 pixels)
+        for point in data_points:
+            if max_engagement > min_engagement:
+                # Normalize engagement rate to 0-1, then scale to 4-12
+                normalized = (point["engagement_rate"] - min_engagement) / (max_engagement - min_engagement)
+                point["r"] = 4 + (normalized * 8)  # Range from 4 to 12 pixels
+            else:
+                point["r"] = 6  # Default size if all engagement rates are the same
+            
+            # Keep engagement_rate for tooltip display (Chart.js ignores extra properties)
+            # Note: engagement_rate is kept for frontend tooltip use
+    
+    return data_points
+
 # --- 4. Main API Endpoint ---
 
 @app.route('/get_trending_data')
@@ -95,14 +170,38 @@ def get_trending_data():
         # --- Data Analysis (50%) ---
         category_analysis = analyze_categories(video_items)
         keyword_analysis = analyze_keywords(video_items)
+        upload_vs_popularity = analyze_upload_vs_popularity(video_items)
         
         # We also need a simple list of videos for the dashboard
         video_dashboard_list = []
         for item in video_items:
+            # Extract statistics safely
+            views_str = item['statistics'].get('viewCount')
+            likes_str = item['statistics'].get('likeCount')
+            comments_str = item['statistics'].get('commentCount')
+
+            try:
+                views = int(views_str) if views_str is not None else 0
+            except ValueError:
+                views = 0
+
+            try:
+                likes = int(likes_str) if likes_str is not None else 0
+            except ValueError:
+                likes = 0
+
+            try:
+                comments = int(comments_str) if comments_str is not None else 0
+            except ValueError:
+                comments = 0
+
+            engagement_rate = round(((likes + comments) / views) * 100, 2) if views > 0 else 0.0
+
             video_dashboard_list.append({
                 "title": item['snippet']['title'],
                 "thumbnail": item['snippet']['thumbnails']['default']['url'],
-                "views": item['statistics'].get('viewCount', 'N/A')
+                "views": item['statistics'].get('viewCount', 'N/A'),
+                "engagement_rate": engagement_rate
             })
 
         # Return everything in a structured JSON format
@@ -111,7 +210,8 @@ def get_trending_data():
             "country": country_code,
             "videos": video_dashboard_list,
             "category_analysis": category_analysis,
-            "keyword_analysis": keyword_analysis
+            "keyword_analysis": keyword_analysis,
+            "upload_vs_popularity": upload_vs_popularity
         })
 
     except Exception as e:
