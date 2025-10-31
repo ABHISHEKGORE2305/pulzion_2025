@@ -537,19 +537,33 @@
             }
 
             // Loop through each video and create an HTML card for it
+            // videos.forEach(video => {
+            //     const videoCard = `
+            //         <div class="video-card"> 
+            //             <img src="${video.thumbnail}" alt="Video thumbnail">
+            //             <div class="video-info">
+            //                 <h3>${video.title}</h3>
+            //                 <p>${Number(video.views).toLocaleString()} views</p>
+            //             </div>
+            //         </div>
+            //     `;
+            //     // Add the new card to the grid
+            //     videoGrid.innerHTML += videoCard;
+            // });
             videos.forEach(video => {
-                const videoCard = `
-                    <div class="video-card"> 
-                        <img src="${video.thumbnail}" alt="Video thumbnail">
-                        <div class="video-info">
-                            <h3>${video.title}</h3>
-                            <p>${Number(video.views).toLocaleString()} views</p>
-                        </div>
-                    </div>
-                `;
-                // Add the new card to the grid
-                videoGrid.innerHTML += videoCard;
-            });
+    const videoUrl = `https://www.youtube.com/watch?v=${video.video_id}`;
+    const videoCard = ` 
+        <a href="${videoUrl}" target="_blank" class="video-card" rel="noopener noreferrer">
+            <img src="${video.thumbnail}" alt="Video thumbnail">
+            <div class="video-info">
+                <h3>${video.title}</h3>
+                <p>${Number(video.views).toLocaleString()} views</p>
+            </div>
+        </a>
+    `;
+    videoGrid.innerHTML += videoCard;
+});
+
         }
 
         // --- 7. Helper Function: Update Charts ---
