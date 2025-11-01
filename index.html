@@ -3,68 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Trending Analyzer</title>
+    <title>YouTube Trending Analyzer - Dashboard</title>
     
     <link rel="icon" href="https://www.youtube.com/s/desktop/1a56be5e/img/favicon.ico" type="image/x-icon">
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Light Theme - Red Accent */
-            --bg: #ffffff;
-            --text: #1f2937;
-            --heading: #2c3e50;
-            --accent: #e63946;
+            /* Light Theme - YouTube Red Theme */
+            --bg: #f8f9fa;
+            --text: #212529;
+            --heading: #212529;
+            --accent: #FF0000; /* YouTube Red */
+            --accent-light: #ff4d4d;
+            --accent-dark: #cc0000;
             --card-bg: #ffffff;
-            --surface: #f8f9fa;
+            --surface: #f1f3f5;
             --btn-text: #ffffff;
-            /* Chart color palette - red accent theme */
-            --chart1: #e63946;
-            --chart2: #f77f7f;
-            --chart3: #fcbfbf;
-            --chart4: #8ecae6;
-            --chart5: #219ebc;
-            --chart6: #ff9f40;
-            --chart7: #a29bfe;
-            --chart8: #ffd166;
-            --chart9: #06d6a0;
-            --chart10: #118ab2;
-            --barFill: #e63946;
-            --barBorder: #e63946;
-            --barHover: #f77f7f;
-            --engFill: rgba(230, 57, 70, 0.7);
-            --engBorder: #e63946;
-            --engHover: #e63946;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #FF0000 0%, #cc0000 100%); /* YouTube Red Gradient */
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --sidebar-bg: #ffffff;
+            --main-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            /* Chart color palette - YouTube Red theme */
+            --chart1: #FF0000;
+            --chart2: #ff4d4d;
+            --chart3: #ff8080;
+            --chart4: #7c3aed;
+            --chart5: #a78bfa;
+            --chart6: #06b6d4;
+            --chart7: #67e8f9;
+            --chart8: #fbbf24;
+            --chart9: #34d399;
+            --chart10: #60a5fa;
+            --barFill: #FF0000;
+            --barBorder: #FF0000;
+            --barHover: #ff4d4d;
+            --engFill: rgba(255, 0, 0, 0.7);
+            --engBorder: #FF0000;
+            --engHover: #FF0000;
+            /* Custom scrollbar colors */
+            --scrollbar-bg: #f1f1f1;
+            --scrollbar-thumb: #cccccc;
+            --scrollbar-thumb-hover: #999999;
         }
 
         [data-theme="dark"] {
-            /* Dark Theme - Charcoal background with bright red accent */
-            --bg: #1a1a1a;
+            /* Dark Theme - YouTube Red Theme */
+            --bg: #0f0f0f;
             --text: #e5e7eb;
             --heading: #f3f4f6;
-            --accent: #ff4d4d;
-            --card-bg: #232323;
-            --surface: #2a2a2a;
+            --accent: #FF0000; /* YouTube Red */
+            --accent-light: #ff4d4d;
+            --accent-dark: #cc0000;
+            --card-bg: #1a1a1a;
+            --surface: #232323;
             --btn-text: #ffffff;
-            /* Chart color palette - bright red accent theme */
-            --chart1: #ff4d4d;
-            --chart2: #ff7070;
-            --chart3: #ff9494;
-            --chart4: #7cc6ef;
-            --chart5: #4aa3df;
-            --chart6: #ffb366;
-            --chart7: #b197fc;
-            --chart8: #ffe08a;
-            --chart9: #22d3a8;
-            --chart10: #3cb7e6;
-            --barFill: #ff4d4d;
-            --barBorder: #ff4d4d;
-            --barHover: #ff7070;
-            --engFill: rgba(255, 77, 77, 0.7);
-            --engBorder: #ff4d4d;
-            --engHover: #ff4d4d;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #FF0000 0%, #cc0000 100%); /* YouTube Red Gradient */
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+            --sidebar-bg: #1a1a1a;
+            --main-bg: #0f0f0f;
+            --border-color: #333333;
+            /* Chart color palette - YouTube Red theme */
+            --chart1: #FF0000;
+            --chart2: #ff4d4d;
+            --chart3: #ff8080;
+            --chart4: #a78bfa;
+            --chart5: #c4b5fd;
+            --chart6: #22d3ee;
+            --chart7: #67e8f9;
+            --chart8: #fbbf24;
+            --chart9: #34d399;
+            --chart10: #60a5fa;
+            --barFill: #FF0000;
+            --barBorder: #FF0000;
+            --barHover: #ff4d4d;
+            --engFill: rgba(255, 0, 0, 0.7);
+            --engBorder: #FF0000;
+            --engHover: #FF0000;
+            /* Custom scrollbar colors - Dark theme */
+            --scrollbar-bg: #2a2a2a;
+            --scrollbar-thumb: #555555;
+            --scrollbar-thumb-hover: #777777;
         }
 
         /* Basic Reset & Typography */
@@ -76,83 +107,177 @@
             color: var(--text);
             line-height: 1.6;
             transition: background-color .3s ease, color .3s ease;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Soft shadow */
-            transition: background-color .3s ease;
+        /* Custom Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
         }
 
-        h1, h2 {
-            text-align: center;
-            color: var(--heading);
-            margin-bottom: 25px;
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+        }
+
+        /* Firefox scrollbar styling */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         h1 {
-            font-size: 2.5em;
-            font-weight: 600;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
         }
 
-        h2 {
-            font-size: 1.8em;
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem 1rem;
+            background: var(--gradient-2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             font-weight: 600;
-            margin-top: 40px;
-            border-bottom: 2px solid;
-            border-bottom-color: var(--text);
-            opacity: 1;
-            padding-bottom: 10px;
-            transition: border-color .3s ease, color .3s ease;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+            font-size: 0.9rem;
         }
-        
-        [data-theme="dark"] h2 {
-            border-bottom-color: rgba(229, 231, 235, 0.3);
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
         }
-        
-        :root h2 {
-            border-bottom-color: rgba(31, 41, 55, 0.2);
+
+        /* Split Layout Container */
+        .split-container {
+            display: flex;
+            height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        /* Sidebar (Left Panel) */
+        .sidebar {
+            width: 40%;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 20px;
+            transition: background-color .3s ease;
+        }
+
+        /* Main Content (Right Panel) */
+        .main-content {
+            width: 60%;
+            background-color: var(--main-bg);
+            overflow-y: auto;
+            padding: 20px;
+            transition: background-color .3s ease;
         }
 
         /* Controls Area */
         .controls {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding: 20px;
             background-color: var(--surface);
-            border-radius: 8px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
             transition: background-color .3s ease;
         }
 
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .controls label {
-            font-size: 1.1em;
-            font-weight: 400;
+            font-size: 1em;
+            font-weight: 500;
             color: var(--text);
             transition: color .3s ease;
+            min-width: 120px;
         }
 
         .controls select {
             padding: 10px 15px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             background-color: var(--card-bg);
             color: var(--text);
-            font-size: 1em;
+            font-size: 0.9em;
             cursor: pointer;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            transition: var(--transition);
             appearance: none;
             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.8%204.9-4.7%2011-2.7%2017.2l128%20160c3.7%204.7%209.1%207.5%2014.7%207.5s11-2.8%2014.7-7.5l128-160c2.1-6.2%201.2-12.3-2.7-17.2z%22/%3E%3C/svg%3E');
             background-repeat: no-repeat;
             background-position: right 10px top 50%;
             background-size: 12px auto;
+            padding-right: 35px;
+            flex: 1;
         }
 
         [data-theme="dark"] .controls select {
@@ -162,104 +287,80 @@
         .controls select:hover {
             border-color: var(--accent);
         }
+        
         .controls select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.25);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.25);
             outline: none;
         }
 
-        [data-theme="dark"] .controls select:focus {
-            box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.25);
-        }
-
-
-        /* Video Grid */
-        .video-grid {
+        /* Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .video-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .video-card img {
-            width: 100%;
-            height: 160px; /* Fixed height for thumbnails */
-            object-fit: cover; /* Ensures image covers the area */
-            display: block;
-        }
-
-        .video-info {
+        .stat-card {
+            background-color: var(--surface);
+            border-radius: 12px;
             padding: 15px;
-            flex-grow: 1; /* Allows info to take remaining space */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            text-align: center;
         }
 
-        .video-info h3 {
-            font-size: 1.1em;
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--text);
-            max-height: 4.4em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            transition: color .3s ease;
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .video-info p {
-            font-size: 0.9em;
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
             color: var(--text);
             opacity: 0.7;
-            margin: 0;
-            transition: color .3s ease, opacity .3s ease;
         }
 
         /* Data Insights Section */
         .data-insights {
-            margin-bottom: 50px;
-            padding: 20px;
-            background-color: var(--surface);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-            transition: background-color .3s ease;
+            margin-bottom: 25px;
         }
 
-        .data-insights h2 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            text-align: center;
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
             color: var(--heading);
-            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         /* Tab Bar */
         .tab-bar {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 5px;
+            margin-bottom: 15px;
             border-bottom: 2px solid;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         :root .tab-bar {
@@ -271,23 +372,23 @@
         }
 
         .tab-btn {
-            padding: 12px 24px;
+            padding: 8px 16px;
             background-color: transparent;
             border: none;
             border-bottom: 3px solid transparent;
             color: var(--text);
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             font-family: 'Poppins', sans-serif;
-            opacity: 0.6;
+            opacity: 0.7;
             position: relative;
             bottom: -2px;
         }
 
         .tab-btn:hover {
-            opacity: 0.8;
+            opacity: 0.9;
             color: var(--accent);
         }
 
@@ -298,15 +399,21 @@
             font-weight: 600;
         }
 
-        /* Chart Tab Container */
-        .chart-tab-container {
+        /* Chart Container */
+        .chart-container {
             position: relative;
-            min-height: 400px;
+            height: 300px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            transition: background-color .3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .chart-tab {
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .chart-tab.active {
@@ -323,27 +430,215 @@
                 transform: translateY(0);
             }
         }
-        
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
+
+        /* Video Section */
+        .video-section {
+            margin-bottom: 25px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
             background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 140px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .video-info {
+            padding: 12px;
+        }
+
+        .video-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+            max-height: 2.6em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: color .3s ease;
+        }
+
+        .video-meta {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .video-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-meta i {
+            color: var(--accent);
+        }
+
+        .sentiment-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .sentiment-positive {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .sentiment-negative {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .sentiment-neutral {
+            background-color: rgba(107, 114, 128, 0.2);
+            color: #6b7280;
+        }
+
+        /* Expanded Video View */
+        .expanded-video {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: background-color .3s ease;
+            grid-column: 1 / -1; /* Span full width of grid */
+            width: 100%;
+        }
+
+        .expanded-video-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .expanded-video-thumbnail {
+            flex-shrink: 0;
+            width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .expanded-video-thumbnail img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .expanded-video-info {
+            flex: 1;
+        }
+
+        .expanded-video-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--heading);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .expanded-video-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .expanded-video-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+
+        .expanded-video-stat i {
+            color: var(--accent);
+        }
+
+        .expanded-video-description {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .expanded-video-description h5 {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--heading);
+            margin-bottom: 10px;
+        }
+
+        .expanded-video-description p {
+            color: var(--text);
+            opacity: 0.8;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         /* Loader */
         .loader {
-            border: 6px solid #f3f3f3; /* Light grey */
-            border-top: 6px solid #3498db; /* Blue */
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 50px auto;
-            display: none; /* Hidden by default */
+            margin: 20px auto;
+            display: none;
         }
 
         @keyframes spin {
@@ -351,112 +646,204 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Footer (optional but good for hackathons) */
+        /* Footer */
         .footer {
             text-align: center;
-            padding: 30px 0;
-            margin-top: 40px;
+            padding: 20px;
             color: var(--text);
             opacity: 0.7;
-            font-size: 0.9em;
-            border-top: 1px solid;
-            transition: color .3s ease, border-top-color .3s ease;
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
         }
-        
-        :root .footer {
-            border-top-color: rgba(31, 41, 55, 0.1);
-        }
-        
-        [data-theme="dark"] .footer {
-            border-top-color: rgba(229, 231, 235, 0.1);
-        }
+
         .footer a {
             color: var(--accent);
             text-decoration: none;
             transition: color .3s ease;
         }
+
         .footer a:hover {
             text-decoration: underline;
             opacity: 0.8;
         }
 
-        .theme-toggle {
-            display: inline-block;
-            padding: 10px 16px;
-            background-color: var(--accent);
-            color: var(--btn-text);
+        /* Mobile Toggle Button */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-2);
+            border-radius: 50%;
             border: none;
-            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            font-weight: 600;
-            transition: background-color .3s ease, color .3s ease, transform .2s ease;
-        }
-        .theme-toggle:hover {
-            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.4);
+            z-index: 1000;
+            transition: var(--transition);
         }
 
-        /* Responsive adjustments */
+        .mobile-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .split-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                max-height: 60vh;
+            }
+
+            .main-content {
+                width: 100%;
+                min-height: 40vh;
+            }
+
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .sidebar.hidden {
+                display: none;
+            }
+
+            .main-content.full-width {
+                width: 100%;
+            }
+        }
+
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
+            .header-content {
+                flex-direction: column;
+                gap: 0.5rem;
             }
+
             h1 {
-                font-size: 2em;
+                font-size: 1.5rem;
             }
-            h2 {
-                font-size: 1.5em;
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
-            .controls {
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .control-row {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .tab-bar {
-                gap: 5px;
-            }
-            .tab-btn {
-                padding: 10px 16px;
-                font-size: 0.9em;
+
+            .controls label {
+                min-width: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>YouTube Trending Video Analyzer</h1>
-        <div style="text-align:center; margin-bottom: 10px;">
-            <button id="themeToggle" class="theme-toggle">Toggle Theme</button>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+                <h1>YouTube Trending Analyzer</h1>
+            </div>
+            <div class="header-controls">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark</span>
+                </button>
+            </div>
         </div>
+    </header>
 
-        <div class="controls">
-            <label for="countrySelect">Select Country:</label>
-            <select id="countrySelect">
-                
-                <option value="US">United States</option>
-                <option value="IN" selected>India</option>
-                <option value="GB">United Kingdom</option>
-                <option value="CA">Canada</option>
-                <option value="AU">Australia</option>
-                <option value="DE">Germany</option>
-                <option value="BR">Brazil</option>
-                <option value="JP">Japan</option>
-                <option value="KR">South Korea</option>
-                <option value="MX">Mexico</option>
-            </select>
-        </div>
+    <div class="split-container">
+        <!-- Sidebar (Left Panel) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="controls">
+                <div class="control-row">
+                    <label for="countrySelect">Country:</label>
+                    <select id="countrySelect">
+                        <option value="US">United States</option>
+                        <option value="IN" selected>India</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="CA">Canada</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="BR">Brazil</option>
+                        <option value="JP">Japan</option>
+                        <option value="KR">South Korea</option>
+                        <option value="MX">Mexico</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <label for="categoryFilter">Category:</label>
+                    <select id="categoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="10">Music</option>
+                        <option value="20">Gaming</option>
+                        <option value="22">People & Blogs</option>
+                        <option value="23">Comedy</option>
+                        <option value="24">Entertainment</option>
+                        <option value="25">News & Politics</option>
+                        <option value="26">Howto & Style</option>
+                        <option value="27">Education</option>
+                        <option value="28">Science & Technology</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <label for="keywordSearch">Search Keyword:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="keywordSearch" placeholder="Enter keyword (e.g., 'music', 'trailer')" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <button id="searchBtn" style="padding: 8px 20px; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+                        <button id="clearKeywordBtn" style="padding: 8px 15px; background-color: #999; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">Clear</button>
+                    </div>
+                </div>
+            </div>
 
-        <div id="loader" class="loader"></div> 
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0%</div>
+                    <div class="stat-label">Overall Engagement</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Comments</div>
+                </div>
+            </div>
 
-        <div class="main-content">
-            <!-- Data Insights Section with Tabs -->
-            <section class="data-insights">
-                <h2>📊 Data Insights</h2>
+            <div class="data-insights">
+                <h3 class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Data Insights
+                </h3>
                 
                 <div class="tab-bar">
-                    <button class="tab-btn active" data-tab="categories">Top Categories</button>
-                    <button class="tab-btn" data-tab="keywords">Top Keywords</button>
-                    <button class="tab-btn" data-tab="engagement">Engagement Rate</button>
-                    <button class="tab-btn" data-tab="timepop">Time vs Popularity</button>
+                    <button class="tab-btn active" data-tab="categories">Categories</button>
+                    <button class="tab-btn" data-tab="keywords">Keywords</button>
+                    <button class="tab-btn" data-tab="engagement">Engagement</button>
+                    <button class="tab-btn" data-tab="timepop">Time vs Pop</button>
                 </div>
                 
                 <div class="chart-tab-container">
@@ -481,41 +868,69 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <h2 id="videoSectionTitle">Trending Videos in India</h2>
-            <div id="videoGrid" class="video-grid">
             </div>
-        </div>
+        </aside>
+
+        <!-- Main Content (Right Panel) -->
+        <main class="main-content" id="mainContent">
+            <div class="video-section">
+                <h3 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    Trending Videos in India
+                </h3>
+                
+                <div id="loader" class="loader"></div>
+                
+                <div id="videoGrid" class="video-grid">
+                    <!-- Video cards will be populated by JavaScript -->
+                </div>
+                
+                <div id="alsoTrendingSection" style="display: none; margin-top: 40px;">
+                    <h3 id="alsoTrendingTitle" style="color: var(--heading); margin-bottom: 20px; font-size: 1.5em;"></h3>
+                    <div id="alsoTrendingGrid" class="video-grid">
+                        <!-- Also trending videos will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>&copy; 2024 YouTube Trending Analyzer. Data from <a href="https://developers.google.com/youtube/v3" target="_blank">YouTube Data API v3</a>.</p>
+            </footer>
+        </main>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2024 YouTube Trending Analyzer. Built for Hackathon. Data from <a href="https://developers.google.com/youtube/v3" target="_blank">YouTube Data API v3</a>.</p>
-    </footer>
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle" id="mobileToggle">
+        <i class="fas fa-chart-pie"></i>
+    </button>
 
-    
     <script>
-        // --- 1. DOM Element Selectors ---
-        // Get references to all the important HTML elements we need to work with
+        // --- DOM Elements ---
         const countrySelect = document.getElementById('countrySelect');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const keywordSearch = document.getElementById('keywordSearch');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearKeywordBtn = document.getElementById('clearKeywordBtn');
         const videoGrid = document.getElementById('videoGrid');
-        const categoryChartCanvas = document.getElementById('categoryChart').getContext('2d');
-        const keywordChartCanvas = document.getElementById('keywordChart').getContext('2d');
-        const timePopularityChartCanvas = document.getElementById('timePopularityChart').getContext('2d');
+        const alsoTrendingSection = document.getElementById('alsoTrendingSection');
+        const alsoTrendingTitle = document.getElementById('alsoTrendingTitle');
+        const alsoTrendingGrid = document.getElementById('alsoTrendingGrid');
         const loader = document.getElementById('loader');
-        const mainContent = document.querySelector('.main-content');
-        const videoSectionTitle = document.getElementById('videoSectionTitle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const mobileToggle = document.getElementById('mobileToggle');
+        const themeToggleBtn = document.getElementById('themeToggle');
+        
+        // Track current keyword
+        let currentKeyword = '';
 
-        // --- 2. Chart Variables ---
-        // We initialize these variables so we can create/update the charts later
+        // --- Chart Variables ---
         let categoryChart;
         let keywordChart;
         let engagementChart;
         let timePopularityChart;
 
-        // --- 3. YouTube Category Map ---
-        // This is crucial for making our chart user-friendly.
-        // The API gives us IDs (e.g., "10"), we map them to names (e.g., "Music").
+        // --- YouTube Category Map ---
         const categoryMap = {
             '1': 'Film & Animation',
             '2': 'Autos & Vehicles',
@@ -538,63 +953,180 @@
             '43': 'Shows'
         };
 
-        // --- 4. Event Listener ---
-        // This function runs every time the user picks a new country from the dropdown
+        // --- Event Listeners ---
         countrySelect.addEventListener('change', () => {
             const selectedCountry = countrySelect.value;
-            // Get the text of the selected option (e.g., "India")
             const selectedCountryName = countrySelect.options[countrySelect.selectedIndex].text;
-            // Update the title
-            videoSectionTitle.textContent = `Trending Videos in ${selectedCountryName}`;
-            // Fetch the new data
+            document.querySelector('.video-section .section-title').innerHTML = 
+                `<i class="fas fa-fire"></i> Trending Videos in ${selectedCountryName}`;
+            // Clear keyword when country changes
+            keywordSearch.value = '';
+            currentKeyword = '';
+            clearKeywordBtn.style.display = 'none';
             fetchTrendingData(selectedCountry);
         });
 
-        // --- 5. Main Data Fetching Function ---
-        async function fetchTrendingData(countryCode) {
-            // Show loader and hide content to indicate loading
+        categoryFilter.addEventListener('change', () => {
+            const selectedCategory = categoryFilter.value;
+            filterVideosByCategory(selectedCategory);
+        });
+
+        // --- Keyword Search ---
+        function performKeywordSearch() {
+            const keyword = keywordSearch.value.trim().toLowerCase();
+            if (keyword) {
+                currentKeyword = keyword;
+                clearKeywordBtn.style.display = 'block';
+                fetchTrendingData(countrySelect.value, keyword);
+            }
+        }
+
+        searchBtn.addEventListener('click', performKeywordSearch);
+        keywordSearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performKeywordSearch();
+            }
+        });
+
+        clearKeywordBtn.addEventListener('click', () => {
+            keywordSearch.value = '';
+            currentKeyword = '';
+            clearKeywordBtn.style.display = 'none';
+            alsoTrendingSection.style.display = 'none';
+            fetchTrendingData(countrySelect.value);
+        });
+
+        // --- Mobile Toggle ---
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+            mainContent.classList.toggle('full-width');
+            
+            const icon = mobileToggle.querySelector('i');
+            if (sidebar.classList.contains('hidden')) {
+                icon.className = 'fas fa-list';
+            } else {
+                icon.className = 'fas fa-chart-pie';
+            }
+        });
+
+        // --- Theme Toggle ---
+        function updateThemeButtonLabel() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const icon = themeToggleBtn.querySelector('i');
+            const text = themeToggleBtn.querySelector('span');
+            
+            if (isDark) {
+                icon.className = 'fas fa-sun';
+                text.textContent = 'Light';
+            } else {
+                icon.className = 'fas fa-moon';
+                text.textContent = 'Dark';
+            }
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            localStorage.setItem('theme', theme);
+            updateThemeButtonLabel();
+            applyThemeToCharts();
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            setTheme(isDark ? 'light' : 'dark');
+        });
+
+        // --- Tab Switching ---
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const chartTabs = document.querySelectorAll('.chart-tab');
+
+        function switchTab(tabName) {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            chartTabs.forEach(tab => tab.classList.remove('active'));
+
+            const selectedBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+            const selectedTab = document.querySelector(`.chart-tab[data-tab="${tabName}"]`);
+            
+            if (selectedBtn) selectedBtn.classList.add('active');
+            if (selectedTab) selectedTab.classList.add('active');
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        // --- Data Fetching ---
+        async function fetchTrendingData(countryCode, keyword = '') {
             loader.style.display = 'block';
-            mainContent.style.display = 'none';
+            videoGrid.style.display = 'none';
+            alsoTrendingSection.style.display = 'none';
 
             try {
-                // Use fetch to call our own backend server
-                // This is the "API Integration" part
+                let url = `http://127.0.0.1:5000/get_trending_data?country=${countryCode}`;
+                if (keyword) {
+                    url += `&keyword=${encodeURIComponent(keyword)}`;
+                }
                 
-                const response = await fetch(`http://127.0.0.1:5000/get_trending_data?country=${countryCode}`);
-
+                const response = await fetch(url);
+                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
                 const data = await response.json();
 
                 if (data.success) {
-                    // We got good data, now update the page
-                    // Store videos globally for engagement chart
                     window.currentVideos = data.videos;
-                    updateVideoGrid(data.videos);
+                    
+                    // If keyword search, show first video in expanded view
+                    const showExpanded = keyword && data.videos.length > 0;
+                    
+                    // Apply category filter if one is selected
+                    const selectedCategory = categoryFilter.value;
+                    if (selectedCategory !== 'all') {
+                        const filtered = data.videos.filter(video => {
+                            const videoCategoryId = String(video.category_id || '');
+                            return videoCategoryId === String(selectedCategory);
+                        });
+                        updateVideoGrid(filtered, showExpanded, keyword);
+                    } else {
+                        updateVideoGrid(data.videos, showExpanded, keyword);
+                    }
+                    
+                    // Handle "Also trending" section
+                    if (keyword && data.also_trending && data.also_trending.length > 0) {
+                        updateAlsoTrendingGrid(data.also_trending, keyword);
+                        alsoTrendingTitle.textContent = `Also trending in "${keyword}"`;
+                        alsoTrendingSection.style.display = 'block';
+                    } else {
+                        alsoTrendingSection.style.display = 'none';
+                    }
+                    
                     updateCharts(data.category_analysis, data.keyword_analysis, data.upload_vs_popularity);
+                    updateStats(data);
                 } else {
-                    // Handle errors reported by our backend
                     console.error('Error from backend:', data.error);
                     videoGrid.innerHTML = '<p>Could not fetch trending data. Please try again later.</p>';
                 }
 
             } catch (error) {
-                // Handle network errors
                 console.error('Fetch error:', error);
-                // This error message will now most likely be a "CORS error"
                 videoGrid.innerHTML = `<p>Could not connect to the server. Error: ${error.message}</p>`;
             } finally {
-                // This always runs, whether successful or not
-                // Hide loader and show content again
                 loader.style.display = 'none';
-                mainContent.style.display = 'block';
+                videoGrid.style.display = 'grid';
             }
         }
 
-        // --- 6. Helper Function: Update Video Grid ---
-        function updateVideoGrid(videos) {
-            // Clear out any old videos
+        // --- Update Functions ---
+        function updateVideoGrid(videos, showExpandedFirst = false, keyword = '') {
             videoGrid.innerHTML = '';
 
             if (videos.length === 0) {
@@ -602,79 +1134,229 @@
                 return;
             }
 
-            // Loop through each video and create an HTML card for it
-            // videos.forEach(video => {
-            //     const videoCard = `
-            //         <div class="video-card"> 
-            //             <img src="${video.thumbnail}" alt="Video thumbnail">
-            //             <div class="video-info">
-            //                 <h3>${video.title}</h3>
-            //                 <p>${Number(video.views).toLocaleString()} views</p>
-            //             </div>
-            //         </div>
-            //     `;
-            //     // Add the new card to the grid
-            //     videoGrid.innerHTML += videoCard;
-            // });
-            videos.forEach(video => {
-    const videoUrl = `https://www.youtube.com/watch?v=${video.video_id}`;
-    const videoCard = ` 
-        <a href="${videoUrl}" target="_blank" class="video-card" rel="noopener noreferrer">
-            <img src="${video.thumbnail}" alt="Video thumbnail">
-            <div class="video-info">
-                <h3>${video.title}</h3>
-                <p>${Number(video.views).toLocaleString()} views</p>
-            </div>
-        </a>
-    `;
-    videoGrid.innerHTML += videoCard;
-});
-
+            // If keyword search and showExpandedFirst, show first video in expanded view
+            if (showExpandedFirst && keyword && videos.length > 0) {
+                const firstVideo = videos[0];
+                const sentiment = analyzeSentiment(firstVideo.title, firstVideo.description || '');
+                const expandedVideoHtml = createExpandedVideoHtml(firstVideo, sentiment);
+                videoGrid.innerHTML += expandedVideoHtml;
+                
+                // Show remaining videos as cards
+                videos.slice(1).forEach(video => {
+                    videoGrid.innerHTML += createVideoCard(video);
+                });
+            } else {
+                // Show all videos as cards
+                videos.forEach(video => {
+                    videoGrid.innerHTML += createVideoCard(video);
+                });
+            }
         }
 
-        // --- 7. Helper Function: Update Charts ---
-        function updateCharts(categoryData, keywordData, uploadVsPopularityData) {
+        function createVideoCard(video) {
+            const videoUrl = `https://www.youtube.com/watch?v=${video.video_id}`;
+            const sentiment = analyzeSentiment(video.title, video.description || '');
             
-            // Use built-in easing 'easeInOutQuart' provided by Chart.js v3+
+            return `
+                <div class="video-card" onclick="window.open('${videoUrl}', '_blank')">
+                    <div class="video-thumbnail">
+                        <img src="${escapeHtml(video.thumbnail)}" alt="Video thumbnail">
+                    </div>
+                    <div class="video-info">
+                        <h4 class="video-title">${escapeHtml(video.title)}</h4>
+                        <div class="video-meta">
+                            <div class="video-meta-row">
+                                <i class="fas fa-eye"></i>
+                                <span>${formatNumber(video.views || 0)} views</span>
+                            </div>
+                            <div class="video-meta-row">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>${formatNumber(video.like_count || 0)}</span>
+                            </div>
+                            <div class="video-meta-row">
+                                <i class="fas fa-comments"></i>
+                                <span>${formatNumber(video.comment_count || 0)}</span>
+                            </div>
+                            <span class="sentiment-badge ${sentiment.class}">${sentiment.label}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-            // --- Process Category Data ---
-            // Map IDs to names and sort by count
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function createExpandedVideoHtml(video, sentiment) {
+            const videoUrl = `https://www.youtube.com/watch?v=${video.video_id}`;
+            
+            return `
+                <div class="expanded-video" onclick="window.open('${videoUrl}', '_blank')" style="cursor: pointer;">
+                    <div class="expanded-video-header">
+                        <div class="expanded-video-thumbnail">
+                            <img src="${escapeHtml(video.thumbnail)}" alt="${escapeHtml(video.title)}">
+                        </div>
+                        <div class="expanded-video-info">
+                            <h3 class="expanded-video-title">${escapeHtml(video.title)}</h3>
+                            <div class="expanded-video-stats">
+                                <div class="expanded-video-stat">
+                                    <i class="fas fa-eye"></i>
+                                    <span>${formatNumber(video.views || 0)} views</span>
+                                </div>
+                                <div class="expanded-video-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>${formatNumber(video.like_count || 0)} likes</span>
+                                </div>
+                                <div class="expanded-video-stat">
+                                    <i class="fas fa-comments"></i>
+                                    <span>${formatNumber(video.comment_count || 0)} comments</span>
+                                </div>
+                                <div class="expanded-video-stat">
+                                    <span class="sentiment-badge ${sentiment.class}">${sentiment.label}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateAlsoTrendingGrid(videos, keyword) {
+            alsoTrendingGrid.innerHTML = '';
+
+            if (videos.length === 0) {
+                alsoTrendingGrid.innerHTML = `<p>No additional trending videos found for "${keyword}".</p>`;
+                return;
+            }
+
+            videos.forEach(video => {
+                alsoTrendingGrid.innerHTML += createVideoCard(video);
+            });
+        }
+
+        function updateStats(data) {
+            if (!data || !data.videos) return;
+
+            // Calculate REAL metrics
+            const totalViews = data.videos.reduce((sum, video) => sum + parseInt(video.views || 0), 0);
+            const totalComments = data.videos.reduce((sum, video) => sum + parseInt(video.comment_count || 0), 0);
+            const totalLikes = data.videos.reduce((sum, video) => sum + parseInt(video.like_count || 0), 0);
+            
+            // Calculate overall engagement rate: (Total Likes + Total Comments) / Total Views * 100
+            const overallEngagement = totalViews > 0 
+                ? ((totalLikes + totalComments) / totalViews * 100).toFixed(1) 
+                : '0.0';
+
+            // Update stats cards with REAL values
+            document.querySelector('.stat-value').textContent = formatNumber(totalViews);
+            document.querySelectorAll('.stat-value')[1].textContent = data.videos.length;
+            document.querySelectorAll('.stat-value')[2].textContent = overallEngagement + '%';
+            document.querySelectorAll('.stat-value')[3].textContent = formatNumber(totalComments);
+        }
+
+        function filterVideosByCategory(categoryId) {
+            if (categoryId === 'all') {
+                const showExpanded = currentKeyword && (window.currentVideos || []).length > 0;
+                updateVideoGrid(window.currentVideos || [], showExpanded, currentKeyword);
+                return;
+            }
+
+            // Ensure both sides are strings for proper comparison
+            const filteredVideos = (window.currentVideos || []).filter(video => {
+                const videoCategoryId = String(video.category_id || '');
+                const selectedCategoryId = String(categoryId);
+                return videoCategoryId === selectedCategoryId;
+            });
+            
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `<p>No videos found in "${categoryMap[categoryId] || 'selected'}" category.</p>`;
+            } else {
+                const showExpanded = currentKeyword && filteredVideos.length > 0;
+                updateVideoGrid(filteredVideos, showExpanded, currentKeyword);
+            }
+        }
+
+        // --- Chart Functions ---
+        function getCSSVar(varName) {
+            return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+        }
+
+        function getChartPalette() {
+            return [
+                getCSSVar('--chart1'), getCSSVar('--chart2'), getCSSVar('--chart3'), 
+                getCSSVar('--chart4'), getCSSVar('--chart5'), getCSSVar('--chart6'),
+                getCSSVar('--chart7'), getCSSVar('--chart8'), getCSSVar('--chart9'), 
+                getCSSVar('--chart10')
+            ];
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Sentiment Analysis Function
+        function analyzeSentiment(title, description) {
+            const text = (title + ' ' + description).toLowerCase();
+            
+            // Positive keywords
+            const positiveWords = ['amazing', 'awesome', 'great', 'best', 'love', 'excellent', 'wonderful', 'fantastic', 'perfect', 'brilliant', 'incredible', 'beautiful', 'happy', 'fun', 'enjoy', 'win', 'victory', 'success', 'epic', 'legendary'];
+            // Negative keywords
+            const negativeWords = ['bad', 'worst', 'hate', 'terrible', 'awful', 'horrible', 'disgusting', 'sad', 'angry', 'fail', 'disaster', 'problem', 'issue', 'scandal', 'controversy', 'crisis', 'danger', 'attack'];
+            
+            let positiveCount = 0;
+            let negativeCount = 0;
+            
+            positiveWords.forEach(word => {
+                if (text.includes(word)) positiveCount++;
+            });
+            
+            negativeWords.forEach(word => {
+                if (text.includes(word)) negativeCount++;
+            });
+            
+            if (positiveCount > negativeCount && positiveCount > 0) {
+                return { sentiment: 'positive', label: 'Positive', class: 'sentiment-positive' };
+            } else if (negativeCount > positiveCount && negativeCount > 0) {
+                return { sentiment: 'negative', label: 'Negative', class: 'sentiment-negative' };
+            } else {
+                return { sentiment: 'neutral', label: 'Neutral', class: 'sentiment-neutral' };
+            }
+        }
+
+        function updateCharts(categoryData, keywordData, uploadVsPopularityData) {
+            // Process REAL category data
             const categoryLabels = Object.keys(categoryData).map(id => categoryMap[id] || `Other (${id})`);
             const categoryCounts = Object.values(categoryData);
 
-            // --- Process Keyword Data ---
-            const keywordLabels = keywordData.map(item => item[0]); // e.g., "trailer"
-            const keywordCounts = keywordData.map(item => item[1]); // e.g., 9
+            // Process REAL keyword data  
+            const keywordLabels = keywordData.map(item => item[0]);
+            const keywordCounts = keywordData.map(item => item[1]);
 
-            // --- Update Category Chart (Doughnut) ---
+            // Update Category Chart with REAL data
             if (categoryChart) {
-                // If chart already exists, just update its data with animation
                 categoryChart.data.labels = categoryLabels;
                 categoryChart.data.datasets[0].data = categoryCounts;
-                categoryChart.data.datasets[0].backgroundColor = getChartPalette();
-                categoryChart.update('active'); // Re-animate on update
+                categoryChart.update('active');
             } else {
-                // If it's the first time, create the chart
-                categoryChart = new Chart(categoryChartCanvas, {
+                // Create new chart with REAL data
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                categoryChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: categoryLabels,
                         datasets: [{
-                            label: 'Videos per Category',
                             data: categoryCounts,
                             backgroundColor: getChartPalette(),
-                            hoverBackgroundColor: getChartPalette().map(color => {
-                                // Convert hex to rgba with 0.9 opacity for hover effect
-                                const r = parseInt(color.slice(1, 3), 16);
-                                const g = parseInt(color.slice(3, 5), 16);
-                                const b = parseInt(color.slice(5, 7), 16);
-                                return `rgba(${r}, ${g}, ${b}, 0.9)`;
-                            }),
                             borderWidth: 2,
-                            borderColor: '#ffffff',
-                            hoverBorderWidth: 5,
-                            hoverBorderColor: '#ffffff',
-                            hoverOffset: 10
+                            borderColor: '#ffffff'
                         }]
                     },
                     options: {
@@ -684,65 +1366,24 @@
                             animateRotate: true,
                             animateScale: true,
                             duration: 1500,
-                            easing: 'easeInOutQuart',
-                            onComplete: function() {
-                                // Chart animation complete
-                            }
-                        },
-                        transitions: {
-                            active: {
-                                animation: {
-                                    duration: 800,
-                                    easing: 'easeInOutQuart'
-                                }
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'nearest'
-                        },
-                        onHover: (event, activeElements, chart) => {
-                            chart.canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-                            chart.canvas.style.transition = 'transform 0.3s ease';
-                            if (activeElements.length > 0) {
-                                chart.canvas.style.filter = 'drop-shadow(0 0 15px rgba(0, 0, 0, 0.3))';
-                            } else {
-                                chart.canvas.style.filter = 'none';
-                            }
+                            easing: 'easeInOutQuart'
                         },
                         plugins: {
                             legend: {
                                 position: 'bottom',
                                 labels: {
-                                    padding: 15,
-                                    usePointStyle: true,
-                                    font: {
-                                        size: 11
-                                    }
+                                    padding: 10,
+                                    font: { size: 10 }
                                 }
                             },
                             tooltip: {
-                                enabled: true,
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                padding: 12,
-                                titleFont: {
-                                    size: 14,
-                                    weight: 'bold'
-                                },
-                                bodyFont: {
-                                    size: 13
-                                },
-                                borderColor: 'rgba(255, 255, 255, 0.1)',
-                                borderWidth: 1,
-                                cornerRadius: 8,
-                                displayColors: true,
                                 callbacks: {
                                     label: function(context) {
                                         const label = context.label || '';
                                         const value = context.parsed;
                                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                         const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${label}: ${value} (${percentage}%)`;
+                                        return `${label}: ${value} videos (${percentage}%)`;
                                     }
                                 }
                             }
@@ -751,36 +1392,28 @@
                 });
             }
 
-            // --- Update Keyword Chart (Bar) ---
+            // Update Keyword Chart with REAL data
             if (keywordChart) {
-                // If chart exists, update it with animation
                 keywordChart.data.labels = keywordLabels;
                 keywordChart.data.datasets[0].data = keywordCounts;
-                keywordChart.data.datasets[0].backgroundColor = getCSSVar('--barFill');
-                keywordChart.data.datasets[0].borderColor = getCSSVar('--barBorder');
-                keywordChart.update('active'); // Re-animate on update
+                keywordChart.update('active');
             } else {
-                // If it's the first time, create it
-                keywordChart = new Chart(keywordChartCanvas, {
+                const ctx = document.getElementById('keywordChart').getContext('2d');
+                keywordChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: keywordLabels,
                         datasets: [{
-                            label: 'Top Keyword Mentions',
+                            label: 'Mentions',
                             data: keywordCounts,
-                            backgroundColor: getCSSVar('--barFill'),
-                            borderColor: getCSSVar('--barBorder'),
-                            borderWidth: 2,
-                            borderRadius: 6,
-                            borderSkipped: false,
-                            shadowOffsetX: 0,
-                            shadowOffsetY: 0
+                            backgroundColor: getCSSVar('--chart1'),
+                            borderRadius: 4
                         }]
                     },
                     options: {
-                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
+                        indexAxis: 'y',
                         animation: {
                             duration: 1500,
                             easing: 'easeInOutQuart',
@@ -788,85 +1421,13 @@
                                 return context.dataIndex * 50;
                             }
                         },
-                        transitions: {
-                            active: {
-                                animation: {
-                                    duration: 800,
-                                    easing: 'easeInOutQuart'
-                                }
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        onHover: (event, activeElements, chart) => {
-                            chart.canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-                            if (activeElements.length > 0) {
-                                const datasetIndex = activeElements[0].datasetIndex;
-                                const index = activeElements[0].index;
-                                const barFill = getCSSVar('--barFill');
-                                const barHover = getCSSVar('--barHover');
-                                chart.data.datasets[datasetIndex].backgroundColor = keywordCounts.map((_, i) => 
-                                    i === index ? barHover : barFill
-                                );
-                                chart.data.datasets[datasetIndex].borderWidth = keywordCounts.map((_, i) => 
-                                    i === index ? 4 : 2
-                                );
-                            } else {
-                                chart.data.datasets[0].backgroundColor = getCSSVar('--barFill');
-                                chart.data.datasets[0].borderWidth = 2;
-                            }
-                            chart.update('none');
-                        },
                         plugins: {
-                            legend: {
-                                display: false
-                            },
+                            legend: { display: false },
                             tooltip: {
-                                enabled: true,
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                padding: 12,
-                                titleFont: {
-                                    size: 14,
-                                    weight: 'bold'
-                                },
-                                bodyFont: {
-                                    size: 13
-                                },
-                                borderColor: 'rgba(255, 255, 255, 0.1)',
-                                borderWidth: 1,
-                                cornerRadius: 8,
                                 callbacks: {
                                     label: function(context) {
                                         return `Mentions: ${context.parsed.x}`;
                                     }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: 'rgba(0, 0, 0, 0.05)',
-                                    lineWidth: 1
-                                },
-                                ticks: {
-                                    font: {
-                                        size: 11
-                                    },
-                                    color: '#666'
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    font: {
-                                        size: 11
-                                    },
-                                    color: '#666'
                                 }
                             }
                         }
@@ -874,7 +1435,7 @@
                 });
             }
 
-            // --- Engagement Rate Chart (Bar) ---
+            // Update Engagement Chart with REAL data
             if (window.currentVideos && window.currentVideos.length > 0) {
                 const engagementData = window.currentVideos.map(v => ({
                     title: v.title.length > 25 ? v.title.substring(0, 25) + '...' : v.title,
@@ -889,14 +1450,10 @@
                 const engagementRates = topEngaged.map(v => v.rate);
 
                 if (engagementChart) {
-                    // Update existing chart with animation
                     engagementChart.data.labels = engagementLabels;
                     engagementChart.data.datasets[0].data = engagementRates;
-                    engagementChart.data.datasets[0].backgroundColor = getCSSVar('--engFill');
-                    engagementChart.data.datasets[0].borderColor = getCSSVar('--engBorder');
-                    engagementChart.update('active'); // Re-animate on update
+                    engagementChart.update('active');
                 } else {
-                    // Create new chart
                     const ctx = document.getElementById('engagementChart').getContext('2d');
                     engagementChart = new Chart(ctx, {
                         type: 'bar',
@@ -908,10 +1465,7 @@
                                 backgroundColor: getCSSVar('--engFill'),
                                 borderColor: getCSSVar('--engBorder'),
                                 borderWidth: 2,
-                                borderRadius: 6,
-                                borderSkipped: false,
-                                shadowOffsetX: 0,
-                                shadowOffsetY: 0
+                                borderRadius: 6
                             }]
                         },
                         options: {
@@ -923,38 +1477,6 @@
                                 delay: (context) => {
                                     return context.dataIndex * 60;
                                 }
-                            },
-                            transitions: {
-                                active: {
-                                    animation: {
-                                        duration: 800,
-                                        easing: 'easeInOutQuart'
-                                    }
-                                }
-                            },
-                            interaction: {
-                                intersect: false,
-                                mode: 'index'
-                            },
-                            onHover: (event, activeElements, chart) => {
-                                chart.canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-                                if (activeElements.length > 0) {
-                                    const datasetIndex = activeElements[0].datasetIndex;
-                                    const index = activeElements[0].index;
-                                    const engFill = getCSSVar('--engFill');
-                                    const engHover = getCSSVar('--engHover');
-                                    chart.data.datasets[datasetIndex].backgroundColor = engagementRates.map((_, i) => 
-                                        i === index ? engHover : engFill
-                                    );
-                                    chart.data.datasets[datasetIndex].borderWidth = engagementRates.map((_, i) => 
-                                        i === index ? 4 : 2
-                                    );
-                                    chart.data.datasets[datasetIndex].borderColor = getCSSVar('--engBorder');
-                                } else {
-                                    chart.data.datasets[0].backgroundColor = getCSSVar('--engFill');
-                                    chart.data.datasets[0].borderWidth = 2;
-                                }
-                                chart.update('none');
                             },
                             plugins: {
                                 legend: { display: false },
@@ -970,19 +1492,6 @@
                                     }
                                 },
                                 tooltip: {
-                                    enabled: true,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                    padding: 12,
-                                    titleFont: {
-                                        size: 14,
-                                        weight: 'bold'
-                                    },
-                                    bodyFont: {
-                                        size: 13
-                                    },
-                                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                                    borderWidth: 1,
-                                    cornerRadius: 8,
                                     callbacks: {
                                         label: function(context) {
                                             return `Engagement Rate: ${context.parsed.y.toFixed(2)}%`;
@@ -999,18 +1508,9 @@
                                         font: {
                                             size: 12,
                                             weight: 'bold'
-                                        },
-                                        color: '#666'
-                                    },
-                                    grid: {
-                                        color: 'rgba(0, 0, 0, 0.05)',
-                                        lineWidth: 1
+                                        }
                                     },
                                     ticks: {
-                                        font: {
-                                            size: 11
-                                        },
-                                        color: '#666',
                                         callback: function(value) {
                                             return value + '%';
                                         }
@@ -1022,11 +1522,7 @@
                                         minRotation: 45,
                                         font: {
                                             size: 10
-                                        },
-                                        color: '#666'
-                                    },
-                                    grid: {
-                                        display: false
+                                        }
                                     }
                                 }
                             }
@@ -1035,15 +1531,14 @@
                 }
             }
 
-            // --- Upload vs Popularity Chart (Scatter/Bubble) ---
+            // Update Time vs Popularity Chart with REAL data
             if (uploadVsPopularityData && uploadVsPopularityData.length > 0) {
                 if (timePopularityChart) {
-                    // Update existing chart with animation
                     timePopularityChart.data.datasets[0].data = uploadVsPopularityData;
-                    timePopularityChart.update('active'); // Re-animate on update
+                    timePopularityChart.update('active');
                 } else {
-                    // Create new chart
-                    timePopularityChart = new Chart(timePopularityChartCanvas, {
+                    const ctx = document.getElementById('timePopularityChart').getContext('2d');
+                    timePopularityChart = new Chart(ctx, {
                         type: 'bubble',
                         data: {
                             datasets: [{
@@ -1051,10 +1546,7 @@
                                 data: uploadVsPopularityData,
                                 backgroundColor: getCSSVar('--accent'),
                                 borderColor: getCSSVar('--accent'),
-                                borderWidth: 2,
-                                hoverBackgroundColor: getCSSVar('--accent'),
-                                hoverBorderColor: getCSSVar('--accent'),
-                                hoverBorderWidth: 3
+                                borderWidth: 2
                             }]
                         },
                         options: {
@@ -1067,54 +1559,22 @@
                                     return context.dataIndex * 30;
                                 }
                             },
-                            transitions: {
-                                active: {
-                                    animation: {
-                                        duration: 800,
-                                        easing: 'easeInOutQuart'
-                                    }
-                                }
-                            },
-                            interaction: {
-                                intersect: false,
-                                mode: 'point'
-                            },
-                            onHover: (event, activeElements, chart) => {
-                                chart.canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-                                if (activeElements.length > 0) {
-                                    chart.data.datasets[0].hoverBorderWidth = 4;
-                                } else {
-                                    chart.data.datasets[0].hoverBorderWidth = 2;
-                                }
-                                chart.update('none');
-                            },
                             plugins: {
                                 legend: {
                                     display: false
                                 },
                                 tooltip: {
-                                    enabled: true,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                    padding: 12,
-                                    titleFont: {
-                                        size: 14,
-                                        weight: 'bold'
-                                    },
-                                    bodyFont: {
-                                        size: 13
-                                    },
-                                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                                    borderWidth: 1,
-                                    cornerRadius: 8,
                                     callbacks: {
-                                        title: function() {
-                                            return '';
+                                        title: function(context) {
+                                            const point = context[0].raw;
+                                            const title = point.title || 'Unknown Video';
+                                            // Truncate long titles
+                                            return title.length > 50 ? title.substring(0, 50) + '...' : title;
                                         },
                                         label: function(context) {
                                             const point = context.raw;
                                             const days = point.x;
                                             const views = point.y.toLocaleString();
-                                            // Use stored engagement_rate if available, otherwise estimate from bubble size
                                             const engagement = point.engagement_rate 
                                                 ? point.engagement_rate.toFixed(2) 
                                                 : ((point.r - 5) / 25 * 100).toFixed(2);
@@ -1135,19 +1595,10 @@
                                         font: {
                                             size: 12,
                                             weight: 'bold'
-                                        },
-                                        color: '#666'
+                                        }
                                     },
                                     beginAtZero: true,
-                                    grid: {
-                                        color: 'rgba(0, 0, 0, 0.05)',
-                                        lineWidth: 1
-                                    },
                                     ticks: {
-                                        font: {
-                                            size: 11
-                                        },
-                                        color: '#666',
                                         callback: function(value) {
                                             return value + ' days';
                                         }
@@ -1160,19 +1611,10 @@
                                         font: {
                                             size: 12,
                                             weight: 'bold'
-                                        },
-                                        color: '#666'
+                                        }
                                     },
                                     beginAtZero: true,
-                                    grid: {
-                                        color: 'rgba(0, 0, 0, 0.05)',
-                                        lineWidth: 1
-                                    },
                                     ticks: {
-                                        font: {
-                                            size: 11
-                                        },
-                                        color: '#666',
                                         callback: function(value) {
                                             if (value >= 1000000) {
                                                 return (value / 1000000).toFixed(1) + 'M';
@@ -1190,111 +1632,34 @@
             }
         }
 
-        // --- 8. Theme Helpers & Toggle ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-
-        function getCSSVar(varName) {
-            return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-        }
-
-        function getChartPalette() {
-            return [
-                getCSSVar('--chart1'), getCSSVar('--chart2'), getCSSVar('--chart3'), getCSSVar('--chart4'), getCSSVar('--chart5'),
-                getCSSVar('--chart6'), getCSSVar('--chart7'), getCSSVar('--chart8'), getCSSVar('--chart9'), getCSSVar('--chart10')
-            ];
-        }
-
         function applyThemeToCharts() {
-            const palette = getChartPalette();
+            // Apply theme to existing charts
             if (categoryChart) {
-                categoryChart.data.datasets[0].backgroundColor = palette;
-                // Update hover colors too
-                categoryChart.data.datasets[0].hoverBackgroundColor = palette.map(color => {
-                    const r = parseInt(color.slice(1, 3), 16);
-                    const g = parseInt(color.slice(3, 5), 16);
-                    const b = parseInt(color.slice(5, 7), 16);
-                    return `rgba(${r}, ${g}, ${b}, 0.9)`;
-                });
-                categoryChart.update('none');
+                categoryChart.data.datasets[0].backgroundColor = getChartPalette();
+                categoryChart.update();
             }
             if (keywordChart) {
-                keywordChart.data.datasets[0].backgroundColor = getCSSVar('--barFill');
-                keywordChart.data.datasets[0].borderColor = getCSSVar('--barBorder');
-                keywordChart.update('none');
+                keywordChart.data.datasets[0].backgroundColor = getCSSVar('--chart1');
+                keywordChart.update();
             }
             if (engagementChart) {
                 engagementChart.data.datasets[0].backgroundColor = getCSSVar('--engFill');
                 engagementChart.data.datasets[0].borderColor = getCSSVar('--engBorder');
-                engagementChart.update('none');
+                engagementChart.update();
             }
             if (timePopularityChart) {
                 const accentColor = getCSSVar('--accent');
                 timePopularityChart.data.datasets[0].backgroundColor = accentColor;
                 timePopularityChart.data.datasets[0].borderColor = accentColor;
-                timePopularityChart.data.datasets[0].hoverBackgroundColor = accentColor;
-                timePopularityChart.data.datasets[0].hoverBorderColor = accentColor;
-                timePopularityChart.update('none');
+                timePopularityChart.update();
             }
         }
 
-        function updateThemeButtonLabel() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            // Show the target theme (what you'll switch to), not the current theme
-            themeToggleBtn.textContent = isDark ? 'Light Mode ☀️' : 'Dark Mode 🌙';
-        }
-
-        function setTheme(theme) {
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-            }
-            localStorage.setItem('theme', theme);
-            updateThemeButtonLabel();
-            applyThemeToCharts();
-        }
-
-        // Initialize theme from storage (default light)
+        // --- Initialize ---
         const savedTheme = localStorage.getItem('theme') || 'light';
         setTheme(savedTheme);
-
-        themeToggleBtn.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            setTheme(isDark ? 'light' : 'dark');
-        });
-
-        // --- 9. Tab Switching Functionality ---
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const chartTabs = document.querySelectorAll('.chart-tab');
-
-        function switchTab(tabName) {
-            // Remove active class from all tabs and buttons
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            chartTabs.forEach(tab => tab.classList.remove('active'));
-
-            // Add active class to selected tab button
-            const selectedBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('active');
-            }
-
-            // Add active class to selected chart tab
-            const selectedTab = document.querySelector(`.chart-tab[data-tab="${tabName}"]`);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-        }
-
-        // Add click event listeners to tab buttons
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tabName = button.getAttribute('data-tab');
-                switchTab(tabName);
-            });
-        });
-
-        // --- 10. Initial Load ---
-        // Fetch data for the default country (India) when the page first loads
+        
+        // Initial data fetch
         fetchTrendingData('IN');
     </script>
 </body>
