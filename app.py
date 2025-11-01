@@ -13,8 +13,19 @@ from creator_suggestions import suggest_content
 # --- 1. Setup and Config ---
 
 # Load environment variables (our API key) from the .env file
+<<<<<<< HEAD
 load_dotenv()
 API_KEY = os.getenv("YOUR_API_KEY")  # Replace with your actual YouTube API key
+=======
+
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not YOUTUBE_API_KEY or not GEMINI_API_KEY:
+    raise ValueError("⚠️ API keys not found in environment variables.")
+
+>>>>>>> 32ae293ea110f3def49593725a9cc98f44c03450
 
 # Initialize the NLTK library for keyword analysis
 # We only need to do this once
@@ -321,7 +332,7 @@ def get_trending_data():
         print(f"An error occurred: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
     
-    
+
 @app.route('/get_creator_suggestions')
 def get_creator_suggestions():
     """

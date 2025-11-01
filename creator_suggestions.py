@@ -19,7 +19,11 @@ import google.generativeai as genai
 # 1. Setup
 # -----------------------
 load_dotenv()
+<<<<<<< HEAD
 YOUTUBE_API_KEY = os.getenv("YOUR_API_KEY")
+=======
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+>>>>>>> 32ae293ea110f3def49593725a9cc98f44c03450
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
@@ -150,9 +154,15 @@ Example format (keep the same style):
     text = response.text.strip()
 
     # --- Clean markdown formatting just in case ---
+<<<<<<< HEAD
     text = re.sub(r"\\(.?)\\", r"\1", text)   # remove bold (* **)
     text = re.sub(r"---+", "", text)            # remove horizontal rules
     text = re.sub(r"^\s*-\s*", "    - ", text, flags=re.MULTILINE)  # uniform dashes
+=======
+    text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)  # remove bold (** **)
+    text = re.sub(r"---+", "", text)              # remove horizontal rules
+    text = re.sub(r"^\s*-\s*", "   - ", text, flags=re.MULTILINE)  # uniform dashes
+>>>>>>> 32ae293ea110f3def49593725a9cc98f44c03450
 
     return text
 
