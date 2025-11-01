@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 
 from creator_suggestions import suggest_content
+from creator_coach_ai import fetch_trending_videos, analyze_trends_with_gemini
 
 
 # --- 1. Setup and Config ---
@@ -535,6 +536,46 @@ def get_creator_suggestions():
     except Exception as e:
         print(f"Error generating creator suggestions: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+
+@app.route('/get_creator_coach')
+def get_creator_coach():
+    """
+    Runs the Creator Coach AI analysis for a given country and genre.
+    Returns Gemini insights based on trending YouTube data.
+    """
+    country = request.args.get('country', 'US').upper()
+    genre = request.args.get('genre', None)
+    
+    try:
+        # Fetch trending videos (from your Creator Coach module)
+        videos_df = fetch_trending_videos(region=country, genre=genre, max_results=20)
+        
+        # If no videos found, return message
+        if videos_df.empty:
+            return jsonify({
+                "success": False,
+                "message": f"No trending videos found for {country} (genre: {genre})"
+            }), 404
+
+        # Run Gemini analysis (cleaned text output)
+        insights = analyze_trends_with_gemini(videos_df, country=country, genre=genre)
+
+        # Return insights as JSON
+        return jsonify({
+            "success": True,
+            "country": country,
+            "genre": genre,
+            "insights": insights
+        })
+
+    except Exception as e:
+        print(f"Error running Creator Coach AI: {e}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 # --- 4. Main Server Execution ---
 
