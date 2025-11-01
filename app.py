@@ -7,6 +7,9 @@ from googleapiclient.discovery import build
 from dotenv import load_dotenv
 from flask_cors import CORS
 
+from creator_suggestions import suggest_content
+
+
 # --- 1. Setup and Config ---
 
 # Load environment variables (our API key) from the .env file
@@ -316,6 +319,33 @@ def get_trending_data():
     except Exception as e:
         # Handle errors (like an invalid API key or bad country code)
         print(f"An error occurred: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+    
+@app.route('/get_creator_suggestions')
+def get_creator_suggestions():
+    """
+    Runs the advanced clustering and insight generator from creator_suggestions.py
+    and returns the results as JSON.
+    """
+    region = request.args.get('country', 'US')
+    max_results = int(request.args.get('max_results', 50))
+
+    try:
+        insights, df = suggest_content(region=region, max_results=max_results)
+
+        # Convert DataFrame to dictionary for JSON
+        videos_data = df.to_dict(orient='records')
+
+        return jsonify({
+            "success": True,
+            "region": region,
+            "insights": insights,
+            "video_data": videos_data
+        })
+
+    except Exception as e:
+        print(f"Error generating creator suggestions: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 # --- 4. Main Server Execution ---
