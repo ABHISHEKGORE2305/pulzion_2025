@@ -118,32 +118,22 @@ def analyze_upload_vs_popularity(video_items):
                 days_since_upload = (datetime.now(timezone.utc) - upload_date.replace(tzinfo=timezone.utc)).days
                 
                 if days_since_upload is not None and days_since_upload >= 0:
+                    video_title = snippet.get('title', 'Unknown Video')
+                    video_id = item.get('id', '')
                     data_points.append({
                         "x": days_since_upload,
                         "y": views,
-                        "engagement_rate": engagement_rate  # Store for later normalization
+                        "engagement_rate": engagement_rate,  # Store for later normalization
+                        "title": video_title,
+                        "video_id": video_id
                     })
             except Exception as e:
                 # Skip videos with invalid date formats
                 continue
     
-    # Normalize bubble sizes based on engagement rates for better visualization
-    if data_points:
-        engagement_rates = [point["engagement_rate"] for point in data_points]
-        min_engagement = min(engagement_rates) if engagement_rates else 0
-        max_engagement = max(engagement_rates) if engagement_rates else 1
-        
-        # Normalize to a reasonable bubble size range (4 to 12 pixels)
-        for point in data_points:
-            if max_engagement > min_engagement:
-                # Normalize engagement rate to 0-1, then scale to 4-12
-                normalized = (point["engagement_rate"] - min_engagement) / (max_engagement - min_engagement)
-                point["r"] = 4 + (normalized * 8)  # Range from 4 to 12 pixels
-            else:
-                point["r"] = 6  # Default size if all engagement rates are the same
-            
-            # Keep engagement_rate for tooltip display (Chart.js ignores extra properties)
-            # Note: engagement_rate is kept for frontend tooltip use
+    # Set uniform bubble size for all data points
+    for point in data_points:
+        point["r"] = 8  # Uniform size for all bubbles (8 pixels radius)
     
     return data_points
 
@@ -156,10 +146,12 @@ def get_trending_data():
     """
     # Get the 'country' code from the request (e.g., /get_trending_data?country=US)
     country_code = request.args.get('country', 'US') # Default to 'US'
+    keyword = request.args.get('keyword', '').strip().lower() # Get keyword filter
     
     try:
         # --- API Integration (30%) ---
         # This is the actual call to the YouTube API
+        # Fetch top 25 for main display
         api_request = youtube_service.videos().list(
             part="snippet,statistics", # Request video details and view counts
             chart="mostPopular",      # Get the "trending" chart
@@ -169,6 +161,18 @@ def get_trending_data():
         api_response = api_request.execute()
         
         video_items = api_response.get("items", [])
+        
+        # If keyword is provided, fetch more videos (top 100) for "Also trending" section
+        extended_video_items = []
+        if keyword:
+            extended_request = youtube_service.videos().list(
+                part="snippet,statistics",
+                chart="mostPopular",
+                regionCode=country_code,
+                maxResults=100  # Get top 100 for extended search
+            )
+            extended_response = extended_request.execute()
+            extended_video_items = extended_response.get("items", [])
         
         # --- Data Analysis (50%) ---
         category_analysis = analyze_categories(video_items)
@@ -200,19 +204,113 @@ def get_trending_data():
 
             engagement_rate = round(((likes + comments) / views) * 100, 2) if views > 0 else 0.0
 
+            # Get category ID from snippet (ensure it's a string for consistency)
+            category_id = str(item['snippet'].get('categoryId', ''))
+            
+            # Get higher quality thumbnail (try maxres, then high, fallback to default)
+            thumbnails = item['snippet'].get('thumbnails', {})
+            thumbnail_url = thumbnails.get('maxres', {}).get('url') or \
+                           thumbnails.get('high', {}).get('url') or \
+                           thumbnails.get('medium', {}).get('url') or \
+                           thumbnails.get('default', {}).get('url', '')
+
+            # Get description from snippet
+            description = item['snippet'].get('description', '')
+            
             video_dashboard_list.append({
                 "video_id": item['id'],
                 "title": item['snippet']['title'],
-                "thumbnail": item['snippet']['thumbnails']['default']['url'],
-                "views": item['statistics'].get('viewCount', 'N/A'),
-                "engagement_rate": engagement_rate
+                "thumbnail": thumbnail_url,
+                "views": views,
+                "likes": likes,
+                "comment_count": comments,
+                "like_count": likes,
+                "engagement_rate": engagement_rate,
+                "category_id": category_id,
+                "description": description
             })
+
+        # Helper function to check if video contains keyword
+        def video_contains_keyword(item, keyword):
+            if not keyword:
+                return True
+            title = item['snippet'].get('title', '').lower()
+            description = item['snippet'].get('description', '').lower()
+            return keyword in title or keyword in description
+        
+        # Filter main videos by keyword if provided
+        if keyword:
+            video_dashboard_list = [v for v in video_dashboard_list 
+                                  if keyword in v['title'].lower()]
+        
+        # Process extended videos for "Also trending" section
+        also_trending_list = []
+        if keyword and extended_video_items:
+            for item in extended_video_items:
+                # Skip videos already in main list
+                item_id = item['id']
+                if any(v['video_id'] == item_id for v in video_dashboard_list):
+                    continue
+                
+                # Check if video contains keyword
+                if not video_contains_keyword(item, keyword):
+                    continue
+                
+                # Extract statistics
+                views_str = item['statistics'].get('viewCount')
+                likes_str = item['statistics'].get('likeCount')
+                comments_str = item['statistics'].get('commentCount')
+
+                try:
+                    views = int(views_str) if views_str is not None else 0
+                except ValueError:
+                    views = 0
+
+                try:
+                    likes = int(likes_str) if likes_str is not None else 0
+                except ValueError:
+                    likes = 0
+
+                try:
+                    comments = int(comments_str) if comments_str is not None else 0
+                except ValueError:
+                    comments = 0
+
+                engagement_rate = round(((likes + comments) / views) * 100, 2) if views > 0 else 0.0
+
+                # Get category ID (ensure it's a string for consistency)
+                category_id = str(item['snippet'].get('categoryId', ''))
+                
+                # Get thumbnail
+                thumbnails = item['snippet'].get('thumbnails', {})
+                thumbnail_url = thumbnails.get('maxres', {}).get('url') or \
+                               thumbnails.get('high', {}).get('url') or \
+                               thumbnails.get('medium', {}).get('url') or \
+                               thumbnails.get('default', {}).get('url', '')
+
+                # Get description
+                description = item['snippet'].get('description', '')
+                
+                also_trending_list.append({
+                    "video_id": item_id,
+                    "title": item['snippet']['title'],
+                    "thumbnail": thumbnail_url,
+                    "views": views,
+                    "likes": likes,
+                    "comment_count": comments,
+                    "like_count": likes,
+                    "engagement_rate": engagement_rate,
+                    "category_id": category_id,
+                    "description": description
+                })
 
         # Return everything in a structured JSON format
         return jsonify({
             "success": True,
             "country": country_code,
+            "keyword": keyword,
             "videos": video_dashboard_list,
+            "also_trending": also_trending_list if keyword else [],
             "category_analysis": category_analysis,
             "keyword_analysis": keyword_analysis,
             "upload_vs_popularity": upload_vs_popularity
