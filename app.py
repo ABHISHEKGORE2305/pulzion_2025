@@ -13,19 +13,13 @@ from creator_suggestions import suggest_content
 # --- 1. Setup and Config ---
 
 # Load environment variables (our API key) from the .env file
-<<<<<<< HEAD
 load_dotenv()
-API_KEY = os.getenv("YOUR_API_KEY")  # Replace with your actual YouTube API key
-=======
-
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not YOUTUBE_API_KEY or not GEMINI_API_KEY:
     raise ValueError("⚠️ API keys not found in environment variables.")
-
->>>>>>> 32ae293ea110f3def49593725a9cc98f44c03450
 
 # Initialize the NLTK library for keyword analysis
 # We only need to do this once
@@ -45,7 +39,7 @@ CORS(app)
 
 # Create the YouTube API service object
 # This is what we'll use to make our calls
-youtube_service = build('youtube', 'v3', developerKey=API_KEY)
+youtube_service = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
 
 
 # --- 3. Test Route ---
@@ -148,6 +142,185 @@ def analyze_upload_vs_popularity(video_items):
     
     return data_points
 
+def analyze_upload_times(video_items):
+    """Analyzes which hour of the day (0-23) trending videos were uploaded and their average view counts."""
+    from datetime import datetime, timezone
+    from collections import defaultdict
+    
+    # Dictionary to store hour -> [views, count]
+    hour_data = defaultdict(lambda: {"total_views": 0, "count": 0, "total_engagement": 0.0})
+    
+    for item in video_items:
+        snippet = item.get('snippet', {})
+        statistics = item.get('statistics', {})
+        
+        published_at = snippet.get('publishedAt')
+        views_str = statistics.get('viewCount')
+        likes_str = statistics.get('likeCount')
+        comments_str = statistics.get('commentCount')
+        
+        try:
+            views = int(views_str) if views_str is not None else 0
+        except ValueError:
+            views = 0
+        
+        try:
+            likes = int(likes_str) if likes_str is not None else 0
+        except ValueError:
+            likes = 0
+        
+        try:
+            comments = int(comments_str) if comments_str is not None else 0
+        except ValueError:
+            comments = 0
+        
+        engagement_rate = round(((likes + comments) / views) * 100, 2) if views > 0 else 0.0
+        
+        if published_at:
+            try:
+                # Parse the upload date and time
+                if published_at.endswith('Z'):
+                    upload_date = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%SZ")
+                else:
+                    upload_date = datetime.strptime(published_at.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+                
+                # Extract the hour (0-23)
+                upload_hour = upload_date.hour
+                
+                # Add to the hour's data
+                hour_data[upload_hour]["total_views"] += views
+                hour_data[upload_hour]["count"] += 1
+                hour_data[upload_hour]["total_engagement"] += engagement_rate
+            except Exception as e:
+                # Skip videos with invalid date formats
+                continue
+    
+    # Calculate average views per hour and create data points for line chart
+    upload_time_data = []
+    for hour in range(24):
+        if hour in hour_data:
+            avg_views = hour_data[hour]["total_views"] / hour_data[hour]["count"]
+            avg_engagement = hour_data[hour]["total_engagement"] / hour_data[hour]["count"]
+            video_count = hour_data[hour]["count"]
+        else:
+            avg_views = 0
+            avg_engagement = 0
+            video_count = 0
+        
+        # Format hour for display (12-hour format with AM/PM)
+        hour_label = f"{hour % 12 if hour % 12 != 0 else 12}{'AM' if hour < 12 else 'PM'}"
+        
+        upload_time_data.append({
+            "hour": hour,
+            "hour_label": hour_label,
+            "average_views": round(avg_views, 0),
+            "average_engagement": round(avg_engagement, 2),
+            "video_count": video_count
+        })
+    
+    return upload_time_data
+
+def generate_upload_recommendations(video_items, upload_time_data, category_analysis):
+    """Uses ML/statistical analysis to recommend best upload times and categories."""
+    
+    # Find the best upload hour based on average views (only consider hours with videos)
+    hours_with_videos = [h for h in upload_time_data if h["video_count"] > 0]
+    if not hours_with_videos:
+        # Fallback if no videos found
+        best_hour = 12
+        best_hour_label = "12PM"
+        best_hour_views = 0
+    else:
+        best_hour_data = max(hours_with_videos, key=lambda x: x["average_views"])
+        best_hour = best_hour_data["hour"]
+        best_hour_label = best_hour_data["hour_label"]
+        best_hour_views = best_hour_data["average_views"]
+    
+    # Find top 3 hours for views (only those with videos)
+    top_hours = sorted(hours_with_videos if hours_with_videos else upload_time_data, 
+                      key=lambda x: x["average_views"], reverse=True)[:3]
+    
+    # Find best category based on view count and frequency
+    if category_analysis:
+        # Get category IDs and their counts
+        category_items = list(category_analysis.items())
+        
+        # Analyze videos in each category to find average views
+        category_views = {}
+        for item in video_items:
+            category_id = str(item.get('snippet', {}).get('categoryId', ''))
+            views_str = item.get('statistics', {}).get('viewCount', '0')
+            try:
+                views = int(views_str) if views_str else 0
+            except ValueError:
+                views = 0
+            
+            if category_id:
+                if category_id not in category_views:
+                    category_views[category_id] = {"total_views": 0, "count": 0}
+                category_views[category_id]["total_views"] += views
+                category_views[category_id]["count"] += 1
+        
+        # Calculate average views per category
+        category_performance = []
+        for cat_id, cat_count in category_analysis.items():
+            if cat_id in category_views and category_views[cat_id]["count"] > 0:
+                avg_views = category_views[cat_id]["total_views"] / category_views[cat_id]["count"]
+                category_performance.append({
+                    "category_id": cat_id,
+                    "video_count": cat_count,
+                    "average_views": avg_views,
+                    "performance_score": avg_views * cat_count  # Weight by frequency
+                })
+        
+        if category_performance:
+            best_category = max(category_performance, key=lambda x: x["performance_score"])
+            best_category_id = best_category["category_id"]
+        else:
+            best_category_id = None
+    else:
+        best_category_id = None
+    
+    # Category name mapping (partial - will be completed in frontend)
+    category_map = {
+        "1": "Film & Animation",
+        "2": "Autos & Vehicles",
+        "10": "Music",
+        "15": "Pets & Animals",
+        "17": "Sports",
+        "19": "Travel & Events",
+        "20": "Gaming",
+        "22": "People & Blogs",
+        "23": "Comedy",
+        "24": "Entertainment",
+        "25": "News & Politics",
+        "26": "Howto & Style",
+        "27": "Education",
+        "28": "Science & Technology"
+    }
+    
+    best_category_name = category_map.get(best_category_id, f"Category {best_category_id}") if best_category_id else "Various Categories"
+    
+    # Generate insights text
+    insights = {
+        "best_upload_hour": best_hour,
+        "best_upload_hour_label": best_hour_label,
+        "best_upload_hour_views": int(best_hour_views),
+        "top_hours": [
+            {
+                "hour": h["hour"],
+                "hour_label": h["hour_label"],
+                "average_views": int(h["average_views"])
+            }
+            for h in top_hours
+        ],
+        "best_category_id": best_category_id,
+        "best_category_name": best_category_name,
+        "recommendation_text": f"Based on trending video analytics, upload your content at {best_hour_label} for maximum reach. Videos uploaded at this time show an average of {int(best_hour_views):,} views. The most successful category in trending videos is {best_category_name}."
+    }
+    
+    return insights
+
 # --- 4. Main API Endpoint ---
 
 @app.route('/get_trending_data')
@@ -189,6 +362,8 @@ def get_trending_data():
         category_analysis = analyze_categories(video_items)
         keyword_analysis = analyze_keywords(video_items)
         upload_vs_popularity = analyze_upload_vs_popularity(video_items)
+        upload_times_analysis = analyze_upload_times(video_items)
+        upload_recommendations = generate_upload_recommendations(video_items, upload_times_analysis, category_analysis)
         
         # We also need a simple list of videos for the dashboard
         video_dashboard_list = []
@@ -324,7 +499,9 @@ def get_trending_data():
             "also_trending": also_trending_list if keyword else [],
             "category_analysis": category_analysis,
             "keyword_analysis": keyword_analysis,
-            "upload_vs_popularity": upload_vs_popularity
+            "upload_vs_popularity": upload_vs_popularity,
+            "upload_times_analysis": upload_times_analysis,
+            "upload_recommendations": upload_recommendations
         })
 
     except Exception as e:

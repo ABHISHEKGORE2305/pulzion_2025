@@ -431,6 +431,171 @@
             display: block;
         }
 
+        /* Upload Recommendations Styles */
+        .upload-recommendations {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .ml-recommendations {
+            color: var(--text);
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .recommendation-header i {
+            font-size: 1.5rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .recommendation-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--heading);
+        }
+
+        .recommendation-main {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .best-time-recommendation,
+        .best-category-recommendation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .best-time-recommendation:hover,
+        .best-category-recommendation:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+        }
+
+        .recommendation-icon {
+            font-size: 2rem;
+        }
+
+        .recommendation-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .recommendation-content strong {
+            color: var(--heading);
+            font-size: 0.95rem;
+        }
+
+        .best-time,
+        .best-category {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .best-time-stats {
+            font-size: 0.85rem;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .top-hours {
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+        }
+
+        .top-hours strong {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--heading);
+            font-size: 0.95rem;
+        }
+
+        .recommendation-hour {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: var(--surface);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .recommendation-hour:hover {
+            background-color: var(--accent);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .recommendation-hour:last-child {
+            margin-bottom: 0;
+        }
+
+        .hour-rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--gradient-2);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .hour-time {
+            flex: 1;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .hour-views {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .recommendation-text {
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .recommendation-text p {
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -992,6 +1157,7 @@
                     <button class="tab-btn" data-tab="keywords">Keywords</button>
                     <button class="tab-btn" data-tab="engagement">Engagement</button>
                     <button class="tab-btn" data-tab="timepop">Time vs Pop</button>
+                    <button class="tab-btn" data-tab="uploadtimes">Upload Times</button>
                 </div>
                 
                 <div class="chart-tab-container">
@@ -1014,6 +1180,12 @@
                         <div class="chart-container">
                             <canvas id="timePopularityChart"></canvas>
                         </div>
+                    </div>
+                    <div class="chart-tab" data-tab="uploadtimes">
+                        <div class="chart-container">
+                            <canvas id="uploadTimesChart"></canvas>
+                        </div>
+                        <div id="uploadRecommendations" class="upload-recommendations"></div>
                     </div>
                 </div>
             </div>
@@ -1099,6 +1271,7 @@
         let keywordChart;
         let engagementChart;
         let timePopularityChart;
+        let uploadTimesChart;
 
         // --- YouTube Category Map ---
         const categoryMap = {
@@ -1279,7 +1452,7 @@
                         alsoTrendingSection.style.display = 'none';
                     }
                     
-                    updateCharts(data.category_analysis, data.keyword_analysis, data.upload_vs_popularity);
+                    updateCharts(data.category_analysis, data.keyword_analysis, data.upload_vs_popularity, data.upload_times_analysis, data.upload_recommendations);
                     updateStats(data);
                 } else {
                     console.error('Error from backend:', data.error);
@@ -1613,7 +1786,7 @@
             }
         }
 
-        function updateCharts(categoryData, keywordData, uploadVsPopularityData) {
+        function updateCharts(categoryData, keywordData, uploadVsPopularityData, uploadTimesData, uploadRecommendations) {
             // Process REAL category data
             const categoryLabels = Object.keys(categoryData).map(id => categoryMap[id] || `Other (${id})`);
             const categoryCounts = Object.values(categoryData);
@@ -1910,6 +2083,174 @@
                             }
                         }
                     });
+                }
+            }
+
+            // Update Upload Times Chart with REAL data
+            if (uploadTimesData && uploadTimesData.length > 0) {
+                const hourLabels = uploadTimesData.map(item => item.hour_label);
+                const averageViews = uploadTimesData.map(item => item.average_views);
+
+                if (uploadTimesChart) {
+                    uploadTimesChart.data.labels = hourLabels;
+                    uploadTimesChart.data.datasets[0].data = averageViews;
+                    uploadTimesChart.update('active');
+                } else {
+                    const ctx = document.getElementById('uploadTimesChart').getContext('2d');
+                    uploadTimesChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: hourLabels,
+                            datasets: [{
+                                label: 'Average Views',
+                                data: averageViews,
+                                borderColor: getCSSVar('--accent'),
+                                backgroundColor: getCSSVar('--accent') + '20',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointHoverRadius: 6,
+                                pointBackgroundColor: getCSSVar('--accent'),
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1500,
+                                easing: 'easeInOutQuart'
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: getCSSVar('--text'),
+                                        font: { size: 12, weight: 'bold' },
+                                        padding: 15
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Best Upload Times for Maximum Reach',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: getCSSVar('--text'),
+                                    padding: {
+                                        bottom: 20
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const views = context.parsed.y.toLocaleString();
+                                            const hour = uploadTimesData[context.dataIndex];
+                                            return `Average Views: ${views} (${hour.video_count} videos)`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Upload Hour (24-hour format)',
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        },
+                                        color: getCSSVar('--text')
+                                    },
+                                    ticks: {
+                                        color: getCSSVar('--text'),
+                                        maxRotation: 45,
+                                        minRotation: 45
+                                    },
+                                    grid: {
+                                        color: getCSSVar('--text') + '20'
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Average Views',
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        },
+                                        color: getCSSVar('--text')
+                                    },
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: getCSSVar('--text'),
+                                        callback: function(value) {
+                                            if (value >= 1000000) {
+                                                return (value / 1000000).toFixed(1) + 'M';
+                                            } else if (value >= 1000) {
+                                                return (value / 1000).toFixed(1) + 'K';
+                                            }
+                                            return value.toLocaleString();
+                                        }
+                                    },
+                                    grid: {
+                                        color: getCSSVar('--text') + '20'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Display ML Recommendations
+                if (uploadRecommendations) {
+                    const recContainer = document.getElementById('uploadRecommendations');
+                    if (recContainer) {
+                        const topHoursHtml = uploadRecommendations.top_hours.map((h, idx) => 
+                            `<div class="recommendation-hour">
+                                <span class="hour-rank">${idx + 1}</span>
+                                <span class="hour-time">${h.hour_label}</span>
+                                <span class="hour-views">${formatNumber(h.average_views)} views avg</span>
+                            </div>`
+                        ).join('');
+
+                        recContainer.innerHTML = `
+                            <div class="ml-recommendations">
+                                <div class="recommendation-header">
+                                    <i class="fas fa-brain"></i>
+                                    <h4>ML-Powered Recommendations</h4>
+                                </div>
+                                <div class="recommendation-main">
+                                    <div class="best-time-recommendation">
+                                        <div class="recommendation-icon">🕐</div>
+                                        <div class="recommendation-content">
+                                            <strong>Best Upload Time:</strong>
+                                            <span class="best-time">${uploadRecommendations.best_upload_hour_label}</span>
+                                            <span class="best-time-stats">Avg: ${formatNumber(uploadRecommendations.best_upload_hour_views)} views</span>
+                                        </div>
+                                    </div>
+                                    <div class="top-hours">
+                                        <strong>Top 3 Upload Hours:</strong>
+                                        ${topHoursHtml}
+                                    </div>
+                                    <div class="best-category-recommendation">
+                                        <div class="recommendation-icon">📁</div>
+                                        <div class="recommendation-content">
+                                            <strong>Best Category:</strong>
+                                            <span class="best-category">${uploadRecommendations.best_category_name}</span>
+                                        </div>
+                                    </div>
+                                    <div class="recommendation-text">
+                                        <p>${uploadRecommendations.recommendation_text}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
                 }
             }
         }
