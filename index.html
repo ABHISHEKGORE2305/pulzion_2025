@@ -188,7 +188,8 @@
             gap: 1rem;
         }
 
-        .theme-toggle {
+        .theme-toggle,
+        .header-btn {
             padding: 0.5rem 1rem;
             background: var(--gradient-2);
             color: white;
@@ -204,10 +205,20 @@
             font-size: 0.9rem;
         }
 
-        .theme-toggle:hover {
+        .theme-toggle:hover,
+        .header-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
         }
+        
+        .header-btn {
+            background: var(--gradient-1); /* Use a different gradient */
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .header-btn:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
 
         /* Split Layout Container */
         .split-container {
@@ -641,6 +652,135 @@
             display: none;
         }
 
+        /* AI Suggestion Modal Styles */
+        .ai-loader {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+            display: none; /* Hidden by default */
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            padding: 0;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 700px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--heading);
+        }
+
+        .modal-close {
+            color: var(--text);
+            opacity: 0.6;
+            font-size: 2rem;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .suggestion-error {
+            background-color: var(--surface);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .suggestion-error strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-item {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .suggestion-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--heading);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-item p {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        
+        .suggestion-item p strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -723,6 +863,11 @@
             .main-content.full-width {
                 width: 100%;
             }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
         }
 
         @media (max-width: 768px) {
@@ -762,6 +907,10 @@
                 <h1>YouTube Trending Analyzer</h1>
             </div>
             <div class="header-controls">
+                <button id="aiSuggestBtn" class="header-btn">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Get AI Ideas</span>
+                </button>
                 <button id="themeToggle" class="theme-toggle">
                     <i class="fas fa-moon"></i>
                     <span>Dark</span>
@@ -771,7 +920,6 @@
     </header>
 
     <div class="split-container">
-        <!-- Sidebar (Left Panel) -->
         <aside class="sidebar" id="sidebar">
             <div class="controls">
                 <div class="control-row">
@@ -869,9 +1017,13 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="modal-body">
+                <div id="aiLoader" class="ai-loader"></div>
+                <div id="suggestionResults">
+                    </div>
+            </div> -->
         </aside>
 
-        <!-- Main Content (Right Panel) -->
         <main class="main-content" id="mainContent">
             <div class="video-section">
                 <h3 class="section-title">
@@ -882,14 +1034,12 @@
                 <div id="loader" class="loader"></div>
                 
                 <div id="videoGrid" class="video-grid">
-                    <!-- Video cards will be populated by JavaScript -->
-                </div>
+                    </div>
                 
                 <div id="alsoTrendingSection" style="display: none; margin-top: 40px;">
                     <h3 id="alsoTrendingTitle" style="color: var(--heading); margin-bottom: 20px; font-size: 1.5em;"></h3>
                     <div id="alsoTrendingGrid" class="video-grid">
-                        <!-- Also trending videos will be populated here -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -899,10 +1049,23 @@
         </main>
     </div>
 
-    <!-- Mobile Toggle Button -->
     <button class="mobile-toggle" id="mobileToggle">
         <i class="fas fa-chart-pie"></i>
     </button>
+
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-lightbulb" style="color: var(--accent);"></i> AI Content Suggestions</h2>
+                <span class="modal-close" id="modalCloseBtn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="aiLoader" class="ai-loader"></div>
+                <div id="suggestionResults">
+                    </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // --- DOM Elements ---
@@ -920,6 +1083,13 @@
         const mainContent = document.getElementById('mainContent');
         const mobileToggle = document.getElementById('mobileToggle');
         const themeToggleBtn = document.getElementById('themeToggle');
+        
+        // --- AI Modal DOM Elements ---
+        const aiSuggestBtn = document.getElementById('aiSuggestBtn');
+        const aiModal = document.getElementById('aiModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const aiLoader = document.getElementById('aiLoader');
+        const suggestionResults = document.getElementById('suggestionResults');
         
         // Track current keyword
         let currentKeyword = '';
@@ -1125,6 +1295,117 @@
             }
         }
 
+        // --- AI Suggestion Functions ---
+        async function fetchAISuggestions() {
+            const countryCode = countrySelect.value;
+            
+            // Show modal and loader
+            aiModal.style.display = 'block';
+            aiLoader.style.display = 'block';
+            suggestionResults.innerHTML = ''; // Clear old results
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/get_creator_suggestions?country=${countryCode}`);
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    // Check if insights string is empty
+                    if (!data.insights || data.insights.trim() === '') {
+                        throw new Error('The AI returned an empty response. This might be due to a safety filter or an API issue.');
+                    }
+                    // Parse and display the suggestions
+                    const formattedHtml = parseAndDisplaySuggestions(data.insights);
+                    suggestionResults.innerHTML = formattedHtml;
+                } else {
+                    // This will catch errors from app.py (e.g., {"success": false, "error": "..."})
+                    throw new Error(data.error || 'The server reported an unknown error.');
+                }
+
+            } catch (error) {
+                // This will catch network errors (fetch failed) or the errors thrown above
+                console.error('Error fetching AI suggestions:', error);
+                
+                // Display a much more helpful error message in the modal
+                suggestionResults.innerHTML = `
+                    <div class="suggestion-error">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Oops! Something went wrong.</strong>
+                        <p>We couldn't generate AI suggestions. Here's the error message:</p>
+                        <p><code>${escapeHtml(error.message)}</code></p>
+                        <p style="margin-top: 15px; font-size: 0.9em;">
+                            <strong>Common Causes:</strong><br>
+                            1. The <code>GEMINI_API_KEY</code> in your <code>.env</code> file is missing or invalid.<br>
+                            2. The Google AI API is temporarily down or you've exceeded your quota.<br>
+                            3. A network error prevented the server from responding.
+                        </p>
+                    </div>
+                `;
+            } finally {
+                // Hide loader
+                aiLoader.style.display = 'none';
+            }
+        }
+
+        // --- (MODIFIED) This function now handles leading whitespace ---
+        function parseAndDisplaySuggestions(insights) {
+            // This makes the parser more robust if the AI adds a title
+            const cleanInsights = insights.replace(/^Suggested YouTube Ideas:[\s\n]*/i, '');
+
+            // Split the text block into individual suggestions
+            // Assumes suggestions are numbered e.g., "1. ...", "2. ..."
+            const suggestionBlocks = cleanInsights.split(/\n(?=\d\.\s)/).filter(s => s.trim());
+            let html = '';
+
+            if (suggestionBlocks.length === 0 && cleanInsights.trim()) {
+                // Fallback for non-numbered or single-block text
+                return `<p>${cleanInsights.replace(/\n/g, '<br>')}</p>`;
+            }
+
+            suggestionBlocks.forEach(block => {
+                const lines = block.trim().split('\n');
+                
+                // Ensure title is handled correctly, even if it's the only line
+                const title = lines[0] || '';
+                
+                // --- (FIX) Regex now includes \s* to match leading spaces ---
+                const description = lines.find(l => l.match(/\s*-\s*(Cover|Description):/i)) || '';
+                const hook = lines.find(l => l.match(/\s*-\s*Hook:/i)) || '';
+                const thumbnail = lines.find(l => l.match(/\s*-\s*Thumbnail.*:/i)) || '';
+
+                html += '<div class="suggestion-item">';
+                html += `<h3>${escapeHtml(title)}</h3>`;
+                
+                // --- (FIX) Regex in replace() also includes \s* ---
+                if (description) {
+                    html += `<p>${escapeHtml(description).replace(/\s*-\s*(Cover|Description):/i, '<strong>$1:</strong>')}</p>`;
+                }
+                if (hook) {
+                    html += `<p>${escapeHtml(hook).replace(/\s*-\s*Hook:/i, '<strong>Hook:</strong>')}</p>`;
+                }
+                if (thumbnail) {
+                    html += `<p>${escapeHtml(thumbnail).replace(/\s*-\s*Thumbnail.*:/i, '<strong>Thumbnail:</strong>')}</p>`;
+                }
+                html += '</div>';
+            });
+
+            return html;
+        }
+        // --- END MODIFIED SECTION ---
+
+        // --- AI Modal Event Listeners ---
+        aiSuggestBtn.addEventListener('click', fetchAISuggestions);
+        modalCloseBtn.addEventListener('click', () => {
+            aiModal.style.display = 'none';
+        });
+
+        // Close modal if user clicks outside of the content
+        window.addEventListener('click', (event) => {
+            if (event.target == aiModal) {
+                aiModal.style.display = 'none';
+            }
+        });
+
+
         // --- Update Functions ---
         function updateVideoGrid(videos, showExpandedFirst = false, keyword = '') {
             videoGrid.innerHTML = '';
@@ -1185,6 +1466,7 @@
         }
 
         function escapeHtml(text) {
+            if (typeof text !== 'string') return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;

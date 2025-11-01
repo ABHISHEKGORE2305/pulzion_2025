@@ -19,9 +19,8 @@ import google.generativeai as genai
 # 1. Setup
 # -----------------------
 load_dotenv()
-
-YOUTUBE_API_KEY = "AIzaSyBe_JsNMzh94KhA_MUGMfFgs2VfWGAfu8g"
-GEMINI_API_KEY = "AIzaSyCuApQORQ6Ka12xNGnr9or0yunxytaFAPY"
+YOUTUBE_API_KEY = os.getenv("YOUR_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 genai.configure(api_key=GEMINI_API_KEY)
@@ -123,10 +122,13 @@ You are a YouTube content strategist who helps creators go viral.
 Use the analytics below to generate 5 creative video ideas.
 
 Each idea must include:
-1. A **Title**
-2. A 1-line **Description** (what to cover)
-3. A **Hook** (first 10 seconds)
-4. A short **Thumbnail Text** (max 5 words)
+1. A Title
+2. A 1-line Description (what to cover)
+3. A Hook (first 10 seconds)
+4. A short Thumbnail Text (max 5 words)
+
+Return the ideas in plain text (no markdown, no asterisks, no bold formatting, no headers, no lists with bullets).
+Keep everything clean and readable.
 
 ---
 Trending keywords: {', '.join(top_keywords)}
@@ -136,17 +138,23 @@ Average sentiment polarity: {sentiment:.2f}
 Here are sample trending titles for reference:
 {chr(10).join(['- ' + t for t in sample_titles])}
 
-Be creative and specific. Return in a clean numbered list format like:
-
-1. "Surviving the Halloween Apocalypse"
+Example format (keep the same style):
+1. Surviving the Halloween Apocalypse
    - Cover: trending spooky challenges, short horror skits.
-   - Hook: “What if your favorite YouTubers vanished on Halloween night?”
-   - Thumbnail: “It Actually Happened... 😱”
+   - Hook: "What if your favorite YouTubers vanished on Halloween night?"
+   - Thumbnail: "It Actually Happened... 😱"
 """
-
-    model = genai.GenerativeModel("gemini-2.5-pro")
+    # 🚨 FIX: Changed model name from 'gemini-pro' to 'gemini-2.5-flash'
+    model = genai.GenerativeModel("gemini-2.5-flash") 
     response = model.generate_content(prompt)
-    return response.text.strip()
+    text = response.text.strip()
+
+    # --- Clean markdown formatting just in case ---
+    text = re.sub(r"\\(.?)\\", r"\1", text)   # remove bold (* **)
+    text = re.sub(r"---+", "", text)            # remove horizontal rules
+    text = re.sub(r"^\s*-\s*", "    - ", text, flags=re.MULTILINE)  # uniform dashes
+
+    return text
 
 # -----------------------
 # 8. Full Suggestion Pipeline

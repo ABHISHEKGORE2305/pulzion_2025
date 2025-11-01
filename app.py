@@ -14,7 +14,7 @@ from creator_suggestions import suggest_content
 
 # Load environment variables (our API key) from the .env file
 load_dotenv()
-API_KEY = "AIzaSyBe_JsNMzh94KhA_MUGMfFgs2VfWGAfu8g"
+API_KEY = os.getenv("YOUR_API_KEY")  # Replace with your actual YouTube API key
 
 # Initialize the NLTK library for keyword analysis
 # We only need to do this once
