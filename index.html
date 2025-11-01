@@ -596,6 +596,153 @@
             font-size: 0.95rem;
         }
 
+        /* Creator Coach Styles */
+        .creator-coach-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: background-color .3s ease;
+        }
+
+        .coach-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .coach-header i {
+            font-size: 1.5rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .coach-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--heading);
+        }
+
+        .coach-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .coach-genre-select {
+            padding: 10px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.8%204.9-4.7%2011-2.7%2017.2l128%20160c3.7%204.7%209.1%207.5%2014.7%207.5s11-2.8%2014.7-7.5l128-160c2.1-6.2%201.2-12.3-2.7-17.2z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px auto;
+            padding-right: 35px;
+        }
+
+        [data-theme="dark"] .coach-genre-select {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e5e7eb%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.8%204.9-4.7%2011-2.7%2017.2l128%20160c3.7%204.7%209.1%207.5%2014.7%207.5s11-2.8%2014.7-7.5l128-160c2.1-6.2%201.2-12.3-2.7-17.2z%22/%3E%3C/svg%3E');
+        }
+
+        .coach-genre-select:hover {
+            border-color: var(--accent);
+        }
+
+        .coach-genre-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.25);
+            outline: none;
+        }
+
+        .coach-btn {
+            padding: 12px 20px;
+            background: var(--gradient-2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .coach-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .coach-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .coach-loader {
+            border: 3px solid rgba(255, 0, 0, 0.1);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        .coach-insights {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .coach-insights.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .coach-insights p {
+            margin: 0;
+            line-height: 1.8;
+            color: var(--text);
+            font-size: 0.95rem;
+            white-space: pre-line;
+        }
+
+        .coach-error {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            color: #ef4444;
+            display: none;
+        }
+
+        .coach-error.show {
+            display: block;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1189,11 +1336,36 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="modal-body">
-                <div id="aiLoader" class="ai-loader"></div>
-                <div id="suggestionResults">
-                    </div>
-            </div> -->
+
+            <!-- Creator Coach Section -->
+            <div class="creator-coach-section">
+                <div class="coach-header">
+                    <i class="fas fa-user-graduate"></i>
+                    <h4>Creator Coach AI</h4>
+                </div>
+                <div class="coach-controls">
+                    <label for="coachGenreSelect" style="font-size: 0.9em; font-weight: 500; color: var(--text); margin-bottom: 5px;">Genre/Category:</label>
+                    <select id="coachGenreSelect" class="coach-genre-select">
+                        <option value="">All Genres</option>
+                        <option value="10">Music</option>
+                        <option value="20">Gaming</option>
+                        <option value="22">People & Blogs</option>
+                        <option value="23">Comedy</option>
+                        <option value="24">Entertainment</option>
+                        <option value="25">News & Politics</option>
+                        <option value="26">Howto & Style</option>
+                        <option value="27">Education</option>
+                        <option value="28">Science & Technology</option>
+                    </select>
+                    <button id="getCoachBtn" class="coach-btn">
+                        <i class="fas fa-brain"></i>
+                        <span>Get AI Coaching</span>
+                    </button>
+                </div>
+                <div id="coachLoader" class="coach-loader"></div>
+                <div id="coachInsights" class="coach-insights"></div>
+                <div id="coachError" class="coach-error"></div>
+            </div>
         </aside>
 
         <main class="main-content" id="mainContent">
@@ -1262,6 +1434,13 @@
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const aiLoader = document.getElementById('aiLoader');
         const suggestionResults = document.getElementById('suggestionResults');
+        
+        // --- Creator Coach DOM Elements ---
+        const coachGenreSelect = document.getElementById('coachGenreSelect');
+        const getCoachBtn = document.getElementById('getCoachBtn');
+        const coachLoader = document.getElementById('coachLoader');
+        const coachInsights = document.getElementById('coachInsights');
+        const coachError = document.getElementById('coachError');
         
         // Track current keyword
         let currentKeyword = '';
@@ -1578,6 +1757,55 @@
             }
         });
 
+        // --- Creator Coach Functions ---
+        async function fetchCreatorCoach() {
+            const countryCode = countrySelect.value;
+            const genre = coachGenreSelect.value || null;
+            
+            // Show loader, hide previous results
+            coachLoader.style.display = 'block';
+            coachInsights.classList.remove('show');
+            coachError.classList.remove('show');
+            getCoachBtn.disabled = true;
+            
+            try {
+                let url = `http://127.0.0.1:5000/get_creator_coach?country=${countryCode}`;
+                if (genre) {
+                    url += `&genre=${encodeURIComponent(genre)}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Display insights
+                    coachInsights.innerHTML = `<p>${escapeHtml(data.insights).replace(/\n/g, '<br>')}</p>`;
+                    coachInsights.classList.add('show');
+                } else {
+                    // Show error
+                    coachError.textContent = data.error || data.message || 'Failed to get AI coaching insights.';
+                    coachError.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Error fetching Creator Coach:', error);
+                coachError.textContent = `Could not connect to the server. Error: ${error.message}`;
+                coachError.classList.add('show');
+            } finally {
+                coachLoader.style.display = 'none';
+                getCoachBtn.disabled = false;
+            }
+        }
+
+        // Creator Coach Event Listeners
+        getCoachBtn.addEventListener('click', fetchCreatorCoach);
+        
+        // Also allow Enter key on genre select
+        coachGenreSelect.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                fetchCreatorCoach();
+            }
+        });
+
 
         // --- Update Functions ---
         function updateVideoGrid(videos, showExpandedFirst = false, keyword = '') {
@@ -1798,7 +2026,7 @@
                 // Create new chart with REAL data
                 const ctx = document.getElementById('categoryChart').getContext('2d');
                 categoryChart = new Chart(ctx, {
-                    type: 'doughnut',
+                    type: 'pie',
                     data: {
                         labels: categoryLabels,
                         datasets: [{
