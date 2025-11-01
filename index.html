@@ -234,12 +234,9 @@
             transition: color .3s ease, opacity .3s ease;
         }
 
-        /* Chart Section */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Two columns, responsive */
-            gap: 30px;
-            margin-top: 50px;
+        /* Data Insights Section */
+        .data-insights {
+            margin-bottom: 50px;
             padding: 20px;
             background-color: var(--surface);
             border-radius: 12px;
@@ -247,36 +244,94 @@
             transition: background-color .3s ease;
         }
 
-        .chart-card {
-            background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            min-height: 350px; /* Ensure charts have enough space */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: background-color .3s ease;
-        }
-        
-        /* --- THIS IS THE CSS FIX --- */
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
-            background-color: var(--surface);
-            border-radius: 8px;
-            transition: background-color .3s ease;
-        }
-        /* --- END OF FIX --- */
-
-        .chart-card h3 {
+        .data-insights h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
             text-align: center;
             color: var(--heading);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.4em;
-            transition: color .3s ease;
+            font-size: 2em;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        :root .tab-bar {
+            border-bottom-color: rgba(31, 41, 55, 0.1);
+        }
+
+        [data-theme="dark"] .tab-bar {
+            border-bottom-color: rgba(229, 231, 235, 0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--text);
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            opacity: 0.6;
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            opacity: 0.8;
+            color: var(--accent);
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Chart Tab Container */
+        .chart-tab-container {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .chart-tab {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chart-tab.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            transition: background-color .3s ease;
         }
 
         /* Loader */
@@ -356,8 +411,12 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            .chart-grid {
-                grid-template-columns: 1fr;
+            .tab-bar {
+                gap: 5px;
+            }
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -389,36 +448,43 @@
         <div id="loader" class="loader"></div> 
 
         <div class="main-content">
+            <!-- Data Insights Section with Tabs -->
+            <section class="data-insights">
+                <h2>📊 Data Insights</h2>
+                
+                <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="categories">Top Categories</button>
+                    <button class="tab-btn" data-tab="keywords">Top Keywords</button>
+                    <button class="tab-btn" data-tab="engagement">Engagement Rate</button>
+                    <button class="tab-btn" data-tab="timepop">Time vs Popularity</button>
+                </div>
+                
+                <div class="chart-tab-container">
+                    <div class="chart-tab active" data-tab="categories">
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-tab" data-tab="keywords">
+                        <div class="chart-container">
+                            <canvas id="keywordChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-tab" data-tab="engagement">
+                        <div class="chart-container">
+                            <canvas id="engagementChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-tab" data-tab="timepop">
+                        <div class="chart-container">
+                            <canvas id="timePopularityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <h2 id="videoSectionTitle">Trending Videos in India</h2>
             <div id="videoGrid" class="video-grid">
-                </div>
-
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <h3>Top Categories</h3>
-                    <div class="chart-container">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                    </div>
-                <div class="chart-card">
-                    <h3>Top Keywords in Titles</h3>
-                    <div class="chart-container">
-                        <canvas id="keywordChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <h3>Top 10 Videos by Engagement Rate</h3>
-                    <div class="chart-container">
-                      <canvas id="engagementChart"></canvas>
-                    </div>
-                  </div>
-                <div class="chart-card">
-                    <h3>Time Since Upload vs Popularity</h3>
-                    <div class="chart-container">
-                      <canvas id="uploadPopularityChart"></canvas>
-                    </div>
-                </div>
-                  
             </div>
         </div>
     </div>
@@ -435,7 +501,7 @@
         const videoGrid = document.getElementById('videoGrid');
         const categoryChartCanvas = document.getElementById('categoryChart').getContext('2d');
         const keywordChartCanvas = document.getElementById('keywordChart').getContext('2d');
-        const uploadPopularityChartCanvas = document.getElementById('uploadPopularityChart').getContext('2d');
+        const timePopularityChartCanvas = document.getElementById('timePopularityChart').getContext('2d');
         const loader = document.getElementById('loader');
         const mainContent = document.querySelector('.main-content');
         const videoSectionTitle = document.getElementById('videoSectionTitle');
@@ -445,7 +511,7 @@
         let categoryChart;
         let keywordChart;
         let engagementChart;
-        let uploadPopularityChart;
+        let timePopularityChart;
 
         // --- 3. YouTube Category Map ---
         // This is crucial for making our chart user-friendly.
@@ -971,13 +1037,13 @@
 
             // --- Upload vs Popularity Chart (Scatter/Bubble) ---
             if (uploadVsPopularityData && uploadVsPopularityData.length > 0) {
-                if (uploadPopularityChart) {
+                if (timePopularityChart) {
                     // Update existing chart with animation
-                    uploadPopularityChart.data.datasets[0].data = uploadVsPopularityData;
-                    uploadPopularityChart.update('active'); // Re-animate on update
+                    timePopularityChart.data.datasets[0].data = uploadVsPopularityData;
+                    timePopularityChart.update('active'); // Re-animate on update
                 } else {
                     // Create new chart
-                    uploadPopularityChart = new Chart(uploadPopularityChartCanvas, {
+                    timePopularityChart = new Chart(timePopularityChartCanvas, {
                         type: 'bubble',
                         data: {
                             datasets: [{
@@ -1161,13 +1227,13 @@
                 engagementChart.data.datasets[0].borderColor = getCSSVar('--engBorder');
                 engagementChart.update('none');
             }
-            if (uploadPopularityChart) {
+            if (timePopularityChart) {
                 const accentColor = getCSSVar('--accent');
-                uploadPopularityChart.data.datasets[0].backgroundColor = accentColor;
-                uploadPopularityChart.data.datasets[0].borderColor = accentColor;
-                uploadPopularityChart.data.datasets[0].hoverBackgroundColor = accentColor;
-                uploadPopularityChart.data.datasets[0].hoverBorderColor = accentColor;
-                uploadPopularityChart.update('none');
+                timePopularityChart.data.datasets[0].backgroundColor = accentColor;
+                timePopularityChart.data.datasets[0].borderColor = accentColor;
+                timePopularityChart.data.datasets[0].hoverBackgroundColor = accentColor;
+                timePopularityChart.data.datasets[0].hoverBorderColor = accentColor;
+                timePopularityChart.update('none');
             }
         }
 
@@ -1197,7 +1263,37 @@
             setTheme(isDark ? 'light' : 'dark');
         });
 
-        // --- 9. Initial Load ---
+        // --- 9. Tab Switching Functionality ---
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const chartTabs = document.querySelectorAll('.chart-tab');
+
+        function switchTab(tabName) {
+            // Remove active class from all tabs and buttons
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            chartTabs.forEach(tab => tab.classList.remove('active'));
+
+            // Add active class to selected tab button
+            const selectedBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+
+            // Add active class to selected chart tab
+            const selectedTab = document.querySelector(`.chart-tab[data-tab="${tabName}"]`);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+        }
+
+        // Add click event listeners to tab buttons
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        // --- 10. Initial Load ---
         // Fetch data for the default country (India) when the page first loads
         fetchTrendingData('IN');
     </script>
