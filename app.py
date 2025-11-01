@@ -340,7 +340,7 @@ def get_trending_data():
             part="snippet,statistics", # Request video details and view counts
             chart="mostPopular",      # Get the "trending" chart
             regionCode=country_code,  # Set the country
-            maxResults=25             # Get the top 25 videos
+            maxResults=100             # Get the top 25 videos
         )
         api_response = api_request.execute()
         
